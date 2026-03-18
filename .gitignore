@@ -1,0 +1,79 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+test-build
+
+# Go workspace file
+go.work
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Go mod cache
+go.sum
+
+# Dependency directories (remove the comment below to include it)
+# vendor/
+
+# Wails build directory
+build/
+app.syso
+wails.json.backup*
+
+# Frontend dependencies
+frontend/node_modules/
+frontend/dist/
+frontend/.next/
+frontend/.nuxt/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Log files
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+*.backup2
+*.working
+*.corrupted
+
+# Configuration files (may contain sensitive data)
+config.json
+settings.json
+
+# Build artifacts
+*.tar.gz
+*.zip
+
+# Debug files
+debug
+*.pprof

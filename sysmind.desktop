@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=SysMind
+Comment=AI-powered system monitoring desktop application
+Exec=/home/ogunleye/Downloads/sysmind/build/bin/sysmind
+Icon=/home/ogunleye/Downloads/sysmind/build/icons/icon_512.png
+Terminal=false
+Categories=System;Monitor;
+StartupWMClass=sysmind
+Keywords=system;monitor;performance;ai;cpu;memory;network;
