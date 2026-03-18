@@ -114,6 +114,39 @@ if [ -n "$PLATFORM" ]; then
 fi
 
 # Execute build
+BUILD_FLAGS=""
+
+# Get version information for ldflags
+VERSION=$(git describe --tags --always 2>/dev/null || echo "dev")
+GIT_COMMIT=$(git rev-parse HEAD 2>/dev/null || echo "unknown")
+GIT_TAG=$(git describe --tags --exact-match 2>/dev/null || echo "unknown")
+BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+BUILD_USER=$(whoami)
+
+# Build ldflags
+LDFLAGS="-X 'sysmind/internal/version.Version=${VERSION}' \
+         -X 'sysmind/internal/version.GitCommit=${GIT_COMMIT}' \
+         -X 'sysmind/internal/version.GitTag=${GIT_TAG}' \
+         -X 'sysmind/internal/version.BuildDate=${BUILD_DATE}' \
+         -X 'sysmind/internal/version.BuildUser=${BUILD_USER}'"
+
+if [ "$BUILD_MODE" = "prod" ]; then
+    BUILD_CMD="$BUILD_CMD -clean -upx -s -ldflags \"$LDFLAGS\""
+    info "Building for production with optimizations..."
+else
+    BUILD_CMD="$BUILD_CMD -ldflags \"$LDFLAGS\""
+    info "Building for development..."
+fi
+
+if [ -n "$PLATFORM" ]; then
+    BUILD_CMD="$BUILD_CMD -platform $PLATFORM"
+    info "Target platform: $PLATFORM"
+fi
+
+info "Version: $VERSION"
+info "Git Commit: ${GIT_COMMIT:0:8}"
+info "Build Date: $BUILD_DATE"
+
 eval $BUILD_CMD
 
 if [ $? -eq 0 ]; then

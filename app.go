@@ -12,6 +12,7 @@ import (
 	"sysmind/internal/collectors"
 	"sysmind/internal/models"
 	"sysmind/internal/services"
+	"sysmind/internal/version"
 )
 
 // App struct represents the main application
@@ -1408,4 +1409,19 @@ func (a *App) generateInsights() {
 			}
 		}
 	}
+}
+
+// GetVersion returns the application version information
+func (a *App) GetVersion() version.Info {
+	return version.Get()
+}
+
+// GetVersionString returns a formatted version string
+func (a *App) GetVersionString() string {
+	return version.String()
+}
+
+// GetShortVersion returns a short version string
+func (a *App) GetShortVersion() string {
+	return version.Short()
 }

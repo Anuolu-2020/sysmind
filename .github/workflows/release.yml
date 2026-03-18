@@ -113,7 +113,21 @@ jobs:
         
     - name: Build application
       run: |
-        wails build -clean -platform ${{ matrix.platform }} -upx -s
+        # Get version information for ldflags
+        VERSION="${{ needs.create-release.outputs.tag_name }}"
+        GIT_COMMIT="${{ github.sha }}"
+        GIT_TAG="${{ needs.create-release.outputs.tag_name }}"
+        BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+        BUILD_USER="github-actions"
+        
+        # Build ldflags
+        LDFLAGS="-X 'sysmind/internal/version.Version=${VERSION}' \
+                 -X 'sysmind/internal/version.GitCommit=${GIT_COMMIT}' \
+                 -X 'sysmind/internal/version.GitTag=${GIT_TAG}' \
+                 -X 'sysmind/internal/version.BuildDate=${BUILD_DATE}' \
+                 -X 'sysmind/internal/version.BuildUser=${BUILD_USER}'"
+        
+        wails build -clean -platform ${{ matrix.platform }} -upx -s -ldflags "$LDFLAGS"
         
     - name: Get binary name
       id: binary_name

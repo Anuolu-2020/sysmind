@@ -3453,3 +3453,84 @@ tr.selected {
     align-self: flex-end;
   }
 }
+
+/* Version Information Styles */
+.version-info {
+  margin: 16px 0;
+  padding: 16px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+
+.version-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.version-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.version-label {
+  font-weight: 500;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.version-value {
+  font-family: var(--font-family-mono);
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.about-description {
+  margin-top: 16px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.about-description p {
+  margin: 0 0 16px 0;
+}
+
+.about-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.about-links a {
+  color: var(--accent-primary);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 12px;
+  background: rgba(122, 162, 247, 0.1);
+  border-radius: 16px;
+  border: 1px solid rgba(122, 162, 247, 0.2);
+  transition: all 0.2s ease;
+}
+
+.about-links a:hover {
+  background: rgba(122, 162, 247, 0.2);
+  border-color: rgba(122, 162, 247, 0.4);
+  transform: translateY(-1px);
+}
+
+/* Version Display in Navigation */
+.version-display {
+  margin-top: auto;
+  padding: 8px 16px;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-family-mono);
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  opacity: 0.7;
+}

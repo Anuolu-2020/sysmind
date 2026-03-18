@@ -1,5 +1,16 @@
-# SysMind Makefile
-# Common development tasks
+# Version information
+VERSION ?= $(shell git describe --tags --always 2>/dev/null || echo "dev")
+GIT_COMMIT ?= $(shell git rev-parse HEAD 2>/dev/null || echo "unknown")
+GIT_TAG ?= $(shell git describe --tags --exact-match 2>/dev/null || echo "unknown")
+BUILD_DATE ?= $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
+BUILD_USER ?= $(shell whoami)
+
+# Build flags
+LDFLAGS = -X 'sysmind/internal/version.Version=$(VERSION)' \
+          -X 'sysmind/internal/version.GitCommit=$(GIT_COMMIT)' \
+          -X 'sysmind/internal/version.GitTag=$(GIT_TAG)' \
+          -X 'sysmind/internal/version.BuildDate=$(BUILD_DATE)' \
+          -X 'sysmind/internal/version.BuildUser=$(BUILD_USER)'
 
 .PHONY: help install dev build test clean lint release version-check
 
@@ -21,11 +32,14 @@ dev: ## Start development server
 
 build: ## Build for production
 	@echo "🏗️ Building for production..."
-	./scripts/build.sh --prod
+	@echo "Version: $(VERSION)"
+	@echo "Commit: $(shell echo $(GIT_COMMIT) | cut -c1-8)"
+	wails build -clean -upx -s -ldflags "$(LDFLAGS)"
 
 build-dev: ## Build for development
 	@echo "🏗️ Building for development..."
-	./scripts/build.sh
+	@echo "Version: $(VERSION)"
+	wails build -ldflags "$(LDFLAGS)"
 
 test: ## Run all tests
 	@echo "🧪 Running tests..."
@@ -54,6 +68,14 @@ clean: ## Clean build artifacts
 	rm -f coverage.out coverage.html
 	cd frontend && rm -rf node_modules dist
 
+version: ## Show version information
+	@echo "SysMind Version Information:"
+	@echo "  Version:    $(VERSION)"
+	@echo "  Git Commit: $(shell echo $(GIT_COMMIT) | cut -c1-8)"
+	@echo "  Git Tag:    $(GIT_TAG)"
+	@echo "  Build Date: $(BUILD_DATE)"
+	@echo "  Build User: $(BUILD_USER)"
+
 version-check: ## Check current version and suggest next
 	@./scripts/version-check.sh
 
@@ -76,11 +98,12 @@ deps-update: ## Update dependencies
 
 cross-build: ## Build for all platforms
 	@echo "🌍 Building for all platforms..."
-	./scripts/build.sh --prod --platform linux/amd64
-	./scripts/build.sh --prod --platform linux/arm64  
-	./scripts/build.sh --prod --platform darwin/amd64
-	./scripts/build.sh --prod --platform darwin/arm64
-	./scripts/build.sh --prod --platform windows/amd64
+	@echo "Version: $(VERSION)"
+	wails build -clean -platform linux/amd64 -upx -s -ldflags "$(LDFLAGS)"
+	wails build -clean -platform linux/arm64 -upx -s -ldflags "$(LDFLAGS)"
+	wails build -clean -platform darwin/amd64 -upx -s -ldflags "$(LDFLAGS)"
+	wails build -clean -platform darwin/arm64 -upx -s -ldflags "$(LDFLAGS)"
+	wails build -clean -platform windows/amd64 -upx -s -ldflags "$(LDFLAGS)"
 
 setup: install ## Initial project setup
 	@echo "🚀 Setting up SysMind development environment..."

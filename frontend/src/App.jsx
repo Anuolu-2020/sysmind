@@ -13,6 +13,7 @@ function AppContent() {
   const [quickStats, setQuickStats] = useState({ cpu: 0, memory: 0, disk: 0, alerts: 0 });
   const [isConfigured, setIsConfigured] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
+  const [versionInfo, setVersionInfo] = useState(null);
 
   const playAlertBeep = useCallback((severity) => {
     try {
@@ -64,6 +65,11 @@ function AppContent() {
       if (window.go?.main?.App?.IsAIConfigured) {
         const configured = await window.go.main.App.IsAIConfigured();
         setIsConfigured(configured);
+      }
+      // Also fetch version info
+      if (window.go?.main?.App?.GetVersionString) {
+        const version = await window.go.main.App.GetVersionString();
+        setVersionInfo(version);
       }
     } catch (err) {
       console.error('Error checking config:', err);
@@ -247,6 +253,12 @@ function AppContent() {
         >
           Settings <span className="shortcut-hint">6</span>
         </button>
+        
+        {versionInfo && (
+          <div className="version-display">
+            {versionInfo}
+          </div>
+        )}
       </nav>
 
       <main className="main-content">

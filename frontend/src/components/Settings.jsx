@@ -13,17 +13,22 @@ function Settings({ onConfigChange }) {
   });
   const [isSaving, setIsSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState('');
+  const [versionInfo, setVersionInfo] = useState(null);
 
   const loadData = useCallback(async () => {
     try {
       if (window.go?.main?.App) {
-        const [provs, cfg] = await Promise.all([
+        const [provs, cfg, version] = await Promise.all([
           window.go.main.App.GetAvailableProviders(),
           window.go.main.App.GetAIConfig(),
+          window.go.main.App.GetVersion().catch(() => null),
         ]);
         setProviders(provs || []);
         if (cfg) {
           setConfig(cfg);
+        }
+        if (version) {
+          setVersionInfo(version);
         }
       }
     } catch (err) {
@@ -276,6 +281,58 @@ function Settings({ onConfigChange }) {
           {providerInfo.tip && (
             <p className="provider-tip">{providerInfo.tip}</p>
           )}
+        </div>
+      </div>
+
+      <div className="settings-section">
+        <h3>About SysMind</h3>
+        {versionInfo && (
+          <div className="version-info">
+            <div className="version-row">
+              <span className="version-label">Version:</span>
+              <span className="version-value">{versionInfo.version}</span>
+            </div>
+            {versionInfo.gitTag && versionInfo.gitTag !== "unknown" && (
+              <div className="version-row">
+                <span className="version-label">Release:</span>
+                <span className="version-value">{versionInfo.gitTag}</span>
+              </div>
+            )}
+            <div className="version-row">
+              <span className="version-label">Build:</span>
+              <span className="version-value">{versionInfo.gitCommit?.substring(0, 8) || 'unknown'}</span>
+            </div>
+            <div className="version-row">
+              <span className="version-label">Platform:</span>
+              <span className="version-value">{versionInfo.platform}/{versionInfo.arch}</span>
+            </div>
+            <div className="version-row">
+              <span className="version-label">Go Version:</span>
+              <span className="version-value">{versionInfo.goVersion}</span>
+            </div>
+            {versionInfo.buildDate && versionInfo.buildDate !== "unknown" && (
+              <div className="version-row">
+                <span className="version-label">Built:</span>
+                <span className="version-value">
+                  {new Date(versionInfo.buildDate).toLocaleDateString()}
+                </span>
+              </div>
+            )}
+          </div>
+        )}
+        <div className="about-description">
+          <p>AI-powered system monitoring assistant that helps you understand what your computer is doing in real-time.</p>
+          <div className="about-links">
+            <a href="https://github.com/yourusername/sysmind" target="_blank" rel="noreferrer">
+              GitHub Repository
+            </a>
+            <a href="https://github.com/yourusername/sysmind/issues" target="_blank" rel="noreferrer">
+              Report Issue
+            </a>
+            <a href="https://github.com/yourusername/sysmind/blob/main/LICENSE" target="_blank" rel="noreferrer">
+              License (MIT)
+            </a>
+          </div>
         </div>
       </div>
     </div>
