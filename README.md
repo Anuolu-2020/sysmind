@@ -60,12 +60,12 @@ SysMind is a cross-platform desktop application built with Go and Wails that pro
 
 ### Pre-built Releases (Recommended)
 
-Download the latest release for your platform from the [Releases](https://github.com/yourusername/sysmind/releases) page:
+Download the latest release for your platform from the [Releases](https://github.com/Anuolu-2020/sysmind/releases) page:
 
 #### Linux
 ```bash
 # Download and extract
-wget https://github.com/yourusername/sysmind/releases/latest/download/sysmind-v0.1.0-linux-amd64.tar.gz
+wget https://github.com/Anuolu-2020/sysmind/releases/latest/download/sysmind-v0.1.0-linux-amd64.tar.gz
 tar -xzf sysmind-v0.1.0-linux-amd64.tar.gz
 chmod +x sysmind
 ./sysmind
@@ -74,11 +74,11 @@ chmod +x sysmind
 #### macOS
 ```bash
 # Intel Macs
-wget https://github.com/yourusername/sysmind/releases/latest/download/sysmind-v0.1.0-darwin-amd64.tar.gz
+wget https://github.com/Anuolu-2020/sysmind/releases/latest/download/sysmind-v0.1.0-darwin-amd64.tar.gz
 tar -xzf sysmind-v0.1.0-darwin-amd64.tar.gz
 
 # Apple Silicon Macs  
-wget https://github.com/yourusername/sysmind/releases/latest/download/sysmind-v0.1.0-darwin-arm64.tar.gz
+wget https://github.com/Anuolu-2020/sysmind/releases/latest/download/sysmind-v0.1.0-darwin-arm64.tar.gz
 tar -xzf sysmind-v0.1.0-darwin-arm64.tar.gz
 
 chmod +x sysmind && ./sysmind
@@ -98,7 +98,7 @@ For developers or custom builds:
 go install github.com/wailsapp/wails/v2/cmd/wails@latest
 
 # Clone the repository
-git clone https://github.com/yourusername/sysmind.git
+git clone https://github.com/Anuolu-2020/sysmind.git
 cd sysmind
 
 # Quick setup
@@ -209,7 +209,7 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 ### Quick Development Setup
 ```bash
 # Fork and clone the repository
-git clone https://github.com/yourusername/sysmind.git
+git clone https://github.com/Anuolu-2020/sysmind.git
 cd sysmind
 
 # Setup development environment  
@@ -253,9 +253,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- 🐛 **Bug Reports**: [Open an issue](https://github.com/yourusername/sysmind/issues)
-- 💡 **Feature Requests**: [Discussions](https://github.com/yourusername/sysmind/discussions)  
-- 📧 **Contact**: [your-email@domain.com](mailto:your-email@domain.com)
+- 🐛 **Bug Reports**: [Open an issue](https://github.com/Anuolu-2020/sysmind/issues)
+- 💡 **Feature Requests**: [Discussions](https://github.com/Anuolu-2020/sysmind/discussions)  
+- 📧 **Contact**: [anuolu2020@gmail.com](mailto:anuolu2020@gmail.com)
 
 ---
 

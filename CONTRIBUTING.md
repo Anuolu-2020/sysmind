@@ -14,7 +14,7 @@ Thank you for your interest in contributing to SysMind! We welcome contributions
 1. Fork the repository on GitHub
 2. Clone your fork locally:
    ```bash
-   git clone https://github.com/yourusername/sysmind.git
+   git clone https://github.com/Anuolu-2020/sysmind.git
    cd sysmind
    ```
 3. Install dependencies:

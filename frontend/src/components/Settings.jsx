@@ -323,13 +323,13 @@ function Settings({ onConfigChange }) {
         <div className="about-description">
           <p>AI-powered system monitoring assistant that helps you understand what your computer is doing in real-time.</p>
           <div className="about-links">
-            <a href="https://github.com/yourusername/sysmind" target="_blank" rel="noreferrer">
+            <a href="https://github.com/Anuolu-2020/sysmind" target="_blank" rel="noreferrer">
               GitHub Repository
             </a>
-            <a href="https://github.com/yourusername/sysmind/issues" target="_blank" rel="noreferrer">
+            <a href="https://github.com/Anuolu-2020/sysmind/issues" target="_blank" rel="noreferrer">
               Report Issue
             </a>
-            <a href="https://github.com/yourusername/sysmind/blob/main/LICENSE" target="_blank" rel="noreferrer">
+            <a href="https://github.com/Anuolu-2020/sysmind/blob/main/LICENSE" target="_blank" rel="noreferrer">
               License (MIT)
             </a>
           </div>

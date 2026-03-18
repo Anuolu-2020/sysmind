@@ -256,9 +256,9 @@ After release, monitor these channels:
 ```
 
 ### Monitor Release
-- **Actions**: https://github.com/yourusername/sysmind/actions
-- **Releases**: https://github.com/yourusername/sysmind/releases
-- **Issues**: https://github.com/yourusername/sysmind/issues
+- **Actions**: https://github.com/Anuolu-2020/sysmind/actions
+- **Releases**: https://github.com/Anuolu-2020/sysmind/releases
+- **Issues**: https://github.com/Anuolu-2020/sysmind/issues
 
 ### Emergency Contacts
 - Release Manager: [Your Email]
