@@ -58,7 +58,40 @@ SysMind is a cross-platform desktop application built with Go and Wails that pro
 
 ## 🚀 Installation
 
-### Quick Start
+### Pre-built Releases (Recommended)
+
+Download the latest release for your platform from the [Releases](https://github.com/yourusername/sysmind/releases) page:
+
+#### Linux
+```bash
+# Download and extract
+wget https://github.com/yourusername/sysmind/releases/latest/download/sysmind-v0.1.0-linux-amd64.tar.gz
+tar -xzf sysmind-v0.1.0-linux-amd64.tar.gz
+chmod +x sysmind
+./sysmind
+```
+
+#### macOS
+```bash
+# Intel Macs
+wget https://github.com/yourusername/sysmind/releases/latest/download/sysmind-v0.1.0-darwin-amd64.tar.gz
+tar -xzf sysmind-v0.1.0-darwin-amd64.tar.gz
+
+# Apple Silicon Macs  
+wget https://github.com/yourusername/sysmind/releases/latest/download/sysmind-v0.1.0-darwin-arm64.tar.gz
+tar -xzf sysmind-v0.1.0-darwin-arm64.tar.gz
+
+chmod +x sysmind && ./sysmind
+```
+
+#### Windows
+1. Download `sysmind-v0.1.0-windows-amd64.zip`
+2. Extract the ZIP file
+3. Run `sysmind.exe`
+
+### Build from Source
+
+For developers or custom builds:
 
 ```bash
 # Install Wails CLI
@@ -68,20 +101,15 @@ go install github.com/wailsapp/wails/v2/cmd/wails@latest
 git clone https://github.com/yourusername/sysmind.git
 cd sysmind
 
-# Install dependencies
-cd frontend && npm install && cd ..
-go mod tidy
+# Quick setup
+make setup
 
-# Run in development mode
-wails dev
+# Development mode
+make dev
 
-# Build for production
-wails build
+# Production build
+make build
 ```
-
-### Pre-built Releases
-
-Download the latest release for your platform from the [Releases](https://github.com/yourusername/sysmind/releases) page.
 
 ## ⚙️ Configuration
 
@@ -156,28 +184,53 @@ sysmind/
 
 ```bash
 # Build for current platform
-wails build
+make build
 
-# Build for specific platforms (cross-compilation)
-wails build -platform windows/amd64
-wails build -platform darwin/amd64  
-wails build -platform darwin/arm64
-wails build -platform linux/amd64
+# Build for all platforms
+make cross-build
 
-# Build with custom flags
-wails build -clean -upx -s
+# Development commands
+make dev          # Start development server
+make test         # Run tests
+make lint         # Run linters
+make clean        # Clean build artifacts
+
+# Release management
+make version-check          # Check current version
+make release VERSION=1.2.3  # Create new release
 ```
+
+For detailed build instructions, see [RELEASE.md](RELEASE.md).
 
 ## 🤝 Contributing
 
 We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
 
-### Development Setup
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature-name`
-3. Make your changes and test thoroughly
-4. Commit with conventional commits: `git commit -m "feat: add new feature"`
-5. Push and create a Pull Request
+### Quick Development Setup
+```bash
+# Fork and clone the repository
+git clone https://github.com/yourusername/sysmind.git
+cd sysmind
+
+# Setup development environment  
+make setup
+
+# Start development
+make dev
+```
+
+### Release Process
+For maintainers releasing new versions:
+
+```bash
+# Check what's changed since last release
+make version-check
+
+# Create a new release (automated)
+make release VERSION=1.2.3
+```
+
+See [RELEASE.md](RELEASE.md) for complete release documentation.
 
 ### Areas for Contribution
 - 🐛 Bug fixes and performance improvements
