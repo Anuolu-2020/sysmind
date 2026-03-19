@@ -148,6 +148,12 @@ jobs:
         GIT_TAG="${{ needs.create-release.outputs.tag_name }}"
         BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
         BUILD_USER="github-actions"
+
+        # Use UPX only on Linux/Windows (macOS compression often fails)
+        UPX_FLAG=""
+        if [[ "${{ matrix.os }}" == "ubuntu-latest" || "${{ matrix.os }}" == "ubuntu-24.04-arm64" || "${{ matrix.os }}" == "windows-latest" ]]; then
+          UPX_FLAG="-upx"
+        fi
         
         # Build ldflags
         LDFLAGS="-X 'sysmind/internal/version.Version=${VERSION}' \
@@ -156,7 +162,7 @@ jobs:
                  -X 'sysmind/internal/version.BuildDate=${BUILD_DATE}' \
                  -X 'sysmind/internal/version.BuildUser=${BUILD_USER}'"
         
-        wails build -clean -platform ${{ matrix.platform }} -upx -s -ldflags "$LDFLAGS"
+        wails build -clean -platform ${{ matrix.platform }} $UPX_FLAG -s -ldflags "$LDFLAGS"
         
     - name: Get binary name
       id: binary_name
