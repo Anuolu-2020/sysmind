@@ -57,19 +57,27 @@ func Get() Info {
 	}
 }
 
+// shortCommit returns the first 8 characters of a commit hash, or the full string if shorter
+func shortCommit(commit string) string {
+	if len(commit) > 8 {
+		return commit[:8]
+	}
+	return commit
+}
+
 // String returns a formatted version string
 func String() string {
 	info := Get()
 
 	if GitTag != "unknown" && GitTag != "" {
-		return fmt.Sprintf("SysMind %s (%s)", GitTag, info.GitCommit[:8])
+		return fmt.Sprintf("SysMind %s (%s)", GitTag, shortCommit(info.GitCommit))
 	}
 
 	if Version != "dev" {
-		return fmt.Sprintf("SysMind v%s (%s)", Version, info.GitCommit[:8])
+		return fmt.Sprintf("SysMind v%s (%s)", Version, shortCommit(info.GitCommit))
 	}
 
-	return fmt.Sprintf("SysMind dev (%s)", info.GitCommit[:8])
+	return fmt.Sprintf("SysMind dev (%s)", shortCommit(info.GitCommit))
 }
 
 // Short returns a short version string
