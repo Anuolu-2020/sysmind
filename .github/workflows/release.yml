@@ -129,6 +129,7 @@ jobs:
         mkdir -p build/icons
         cp resources/icons/icon_512.png build/icons/icon_512.png 2>/dev/null || echo "512 icon not found"
         cp resources/icons/icon.ico build/icons/icon.ico 2>/dev/null || echo "ICO icon not found"
+      shell: bash
       
     - name: Install UPX (Linux/macOS)
       if: matrix.os != 'windows-latest'
