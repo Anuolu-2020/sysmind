@@ -29,6 +29,8 @@ When responding:
 6. Treat common ports (80/HTTP, 443/HTTPS) and well-known services as normal
 7. When discussing connections, mention which processes are responsible
 8. Use a helpful, educational tone rather than alarmist
+9. IMPORTANT: Do NOT use markdown formatting like **bold** or *italic* - respond in plain text only
+10. Use simple, readable formatting with line breaks and indentation, but no special markup
 
 Remember: Most network activity is normal. Only flag actual security issues, not routine internet usage.`
 

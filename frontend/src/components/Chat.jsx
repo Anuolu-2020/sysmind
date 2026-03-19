@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 
-function Chat() {
+function Chat({ isConfigured = false, onNavigateToSettings }) {
   const [sessions, setSessions] = useState([]);
   const [currentSessionId, setCurrentSessionId] = useState(null);
   const [currentSession, setCurrentSession] = useState(null);
@@ -405,8 +405,23 @@ function Chat() {
 
         {messages.length === 0 && (
           <div className="welcome-section">
-            <h2>How can I help you today?</h2>
-            <p>Ask questions about your system activity, security, and performance</p>
+            {!isConfigured ? (
+              <>
+                <h2>AI Not Configured</h2>
+                <p>Please configure your AI provider in Settings to use the chat feature.</p>
+                <button 
+                  className="configure-ai-btn"
+                  onClick={onNavigateToSettings}
+                >
+                  Go to Settings
+                </button>
+              </>
+            ) : (
+              <>
+                <h2>How can I help you today?</h2>
+                <p>Ask questions about your system activity, security, and performance</p>
+              </>
+            )}
           </div>
         )}
 
@@ -455,34 +470,43 @@ function Chat() {
         </div>
 
         <div className="chat-input-container">
-          <div className="chat-options">
-            <label className="streaming-toggle">
-              <input
-                type="checkbox"
-                checked={useStreaming}
-                onChange={(e) => setUseStreaming(e.target.checked)}
-              />
-              <span>Stream responses</span>
-            </label>
-          </div>
-          <div className="chat-input-wrapper">
-            <input
-              type="text"
-              className="chat-input"
-              placeholder="Ask about your system..."
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyPress={handleKeyPress}
-              disabled={isLoading}
-            />
-            <button
-              className="send-btn"
-              onClick={() => sendMessage()}
-              disabled={!input.trim() || isLoading}
-            >
-              Send
-            </button>
-          </div>
+          {!isConfigured ? (
+            <div className="chat-not-configured">
+              <span>AI provider not configured. </span>
+              <button onClick={onNavigateToSettings}>Configure in Settings</button>
+            </div>
+          ) : (
+            <>
+              <div className="chat-options">
+                <label className="streaming-toggle">
+                  <input
+                    type="checkbox"
+                    checked={useStreaming}
+                    onChange={(e) => setUseStreaming(e.target.checked)}
+                  />
+                  <span>Stream responses</span>
+                </label>
+              </div>
+              <div className="chat-input-wrapper">
+                <input
+                  type="text"
+                  className="chat-input"
+                  placeholder="Ask about your system..."
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  disabled={isLoading}
+                />
+                <button
+                  className="send-btn"
+                  onClick={() => sendMessage()}
+                  disabled={!input.trim() || isLoading}
+                >
+                  Send
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
