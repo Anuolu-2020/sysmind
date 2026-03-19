@@ -1,3 +1,8 @@
+## [0.1.1] - 2026-03-19
+
+### Changes
+- fix: add permissions to GitHub Actions release workflow (1bd3930)
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
