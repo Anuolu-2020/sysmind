@@ -58,6 +58,115 @@ SysMind is a cross-platform desktop application built with Go and Wails that pro
 - **macOS**: Uses `lsof` and system APIs  
 - **Windows**: Leverages `netstat` and WMI
 
+## 🎨 UI Overview
+
+SysMind features a modern, dark-themed interface with intuitive navigation and real-time data visualization.
+
+### Dashboard Tab
+The main dashboard provides at-a-glance system monitoring:
+- **System Stats Cards** (Top Row)
+  - Real-time CPU usage with per-core breakdown
+  - Memory/RAM usage with swap information
+  - Disk usage with I/O speeds (read/write)
+  - Network activity with upload/download speeds
+- **Resource Timeline Charts** (Middle Section)
+  - CPU, Memory, and Disk utilization trends
+  - Network bandwidth timeline (upload/download)
+  - Customizable time windows (15m, 30m, 60m)
+  - Smooth area charts with historical data
+- **Process List** (Bottom Section)
+  - Sortable table of running processes
+  - Filter by process name
+  - CPU %, Memory usage, and status
+  - Kill process or adjust priority options
+  - Click to expand detailed process information
+- **Open Ports** (Bottom Section)
+  - Monitor all listening and established connections
+  - Port number, protocol, associated process
+  - Filter connections by process name
+  - View socket state and process details
+
+### AI Chat Tab
+Full-featured chat interface for system queries:
+- **Chat Sessions Panel**
+  - Create new conversation sessions
+  - Switch between previous conversations
+  - Session history persists across restarts
+- **Message Display**
+  - User queries appear on the right
+  - AI responses on the left with clear formatting
+  - Real-time streaming responses
+  - Loading spinner while AI is thinking
+- **Input Area**
+  - Single-line message input
+  - Send button or press Enter to submit
+  - Multiline support for complex queries
+
+### Quick Chat Panel (Ctrl+K)
+Floating AI assistant for quick queries:
+- **Floating Window**
+  - Slides in from the right side
+  - No background dimming - stays transparent
+  - Fixed size with smooth animations
+- **Session Menu**
+  - Hamburger icon (☰) to access chat sessions
+  - Quick dropdown list of previous chats
+  - Switch sessions without closing panel
+- **Compact Interface**
+  - Minimalist design with essential controls
+  - Close button (✕) to hide panel
+  - Escape key to dismiss
+  - Always-on-top positioning
+
+### Security Tab
+System security analysis:
+- **Firewall Status** indicator
+- **Suspicious Process Detection**
+  - AI-identified potentially dangerous processes
+  - Detailed risk assessment
+- **Network Connection Analysis**
+  - External connections mapped to processes
+  - Geographic location of remote servers
+  - Helps identify unexpected outbound traffic
+
+### Alerts Tab
+System notifications and warnings:
+- **Alert List** with filtering
+- **Severity Levels**: Info, Warning, Critical
+- **Alert Types**: CPU, Memory, Disk, Network, Security
+- **Dismiss** individual alerts
+- **Audio/Desktop Notifications** (when enabled)
+
+### Settings Tab
+Configuration and preferences:
+- **AI Provider Selection**
+  - Choose between 8 different AI providers
+  - OpenAI, Anthropic, Google Gemini, GitHub Copilot, Cloudflare Workers AI, Zhipu GLM, Moonshot Kimi, Local LLM
+- **API Configuration**
+  - Enter API keys and account information
+  - Select preferred model for each provider
+- **Alert Preferences**
+  - Enable/disable notifications
+  - Audio alert options
+  - Threshold settings for CPU, Memory, Disk
+
+### Header
+- **Title**: "SysMind" with app branding
+- **Alert Badge**: Shows active alert count (if any)
+- **AI Status**: "AI Ready" or "AI Not Configured"
+- **Help Button** (?): Display keyboard shortcuts
+- **Close Button** (✕): Minimize to system tray
+
+### Theme & Design
+- **Dark Theme** (Primary): Dark blue/purple palette for reduced eye strain
+- **Color Coding**:
+  - Blue: Primary accent (CPU, healthy status)
+  - Green: Success/memory
+  - Yellow: Warnings (elevated resource usage)
+  - Red: Critical (high resource usage, dangers)
+- **Responsive Design**: Adapts to different screen sizes
+- **Smooth Animations**: 300ms transitions for panels and modals
+
 ## 📋 Prerequisites
 
 - **Go**: 1.21 or higher
