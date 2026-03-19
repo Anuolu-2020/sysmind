@@ -1,3 +1,16 @@
+## [0.1.5] - 2026-03-19
+
+### Changes
+- Merge pull request #8 from Anuolu-2020/dev (7d6caef)
+- fix: skip UPX compression on macOS release builds (8f14fa6)
+- Merge pull request #7 from Anuolu-2020/main (db4a669)
+- Merge pull request #6 from Anuolu-2020/main (a90353a)
+
+## [0.1.4] - 2026-03-19
+
+### Changes
+- fix: use arm64 runner for linux-arm64 release builds (d4c8c1a)
+
 ## [0.1.3] - 2026-03-19
 
 ### Changes
