@@ -219,37 +219,42 @@ jobs:
         fi
         
         # Create release body
-        cat > release_body.md << EOF
+        # Use a temporary file to avoid YAML escaping issues with $CHANGELOG
+        cat > release_body.md << 'EOF_BODY'
 ## What's New in ${{ needs.create-release.outputs.tag_name }}
 
-$CHANGELOG
+CHANGELOG_PLACEHOLDER
 
 ## Downloads
 
 Choose the appropriate binary for your platform:
 
 ### Linux
-- **AMD64**: \`sysmind-${{ needs.create-release.outputs.tag_name }}-linux-amd64.tar.gz\`
+- **AMD64**: `sysmind-${{ needs.create-release.outputs.tag_name }}-linux-amd64.tar.gz`
 
 ### macOS  
-- **Intel**: \`sysmind-${{ needs.create-release.outputs.tag_name }}-darwin-amd64.tar.gz\`
-- **Apple Silicon**: \`sysmind-${{ needs.create-release.outputs.tag_name }}-darwin-arm64.tar.gz\`
+- **Intel**: `sysmind-${{ needs.create-release.outputs.tag_name }}-darwin-amd64.tar.gz`
+- **Apple Silicon**: `sysmind-${{ needs.create-release.outputs.tag_name }}-darwin-arm64.tar.gz`
 
 ### Windows
-- **AMD64**: \`sysmind-${{ needs.create-release.outputs.tag_name }}-windows-amd64.zip\`
+- **AMD64**: `sysmind-${{ needs.create-release.outputs.tag_name }}-windows-amd64.zip`
 
 ## Installation
 
 1. Download the appropriate binary for your platform
 2. Extract the archive
-3. Run the \`sysmind\` executable
+3. Run the `sysmind` executable
 
 For detailed setup instructions, see the [README](https://github.com/${{ github.repository }}/blob/main/README.md).
 
 ## Verification
 
 All binaries are automatically built and signed by GitHub Actions.
-EOF
+EOF_BODY
+
+        # Replace placeholder with actual changelog
+        # Using a temporary file to handle potential special characters in changelog
+        sed -i "s|CHANGELOG_PLACEHOLDER|$CHANGELOG|" release_body.md
         
     - name: Update Release Description
       uses: actions/github-script@v6
