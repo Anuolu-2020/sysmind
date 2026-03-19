@@ -26,6 +26,10 @@ jobs:
         run: |
           cd frontend
           npm ci
+      - name: Build frontend
+        run: |
+          cd frontend
+          npm run build
       - name: Install Go dependencies
         run: go mod download
       - name: Run Go tests
