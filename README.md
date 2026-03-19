@@ -64,9 +64,9 @@ SysMind features a modern, dark-themed interface with intuitive navigation and r
 
 ### Dashboard Tab
 
-| Main Dashboard | Process & Ports |
+| | |
 |---|---|
-| ![Dashboard Tab Screenshot](docs/screenshots/dashboard.png) | ![Dashboard Resources Screenshot](docs/screenshots/dashboard2.png) |
+| ![Dashboard Tab Screenshot](docs/screenshots/dashboard.png) | ![Dashboard Tab Screenshot](docs/screenshots/dashboard2.png) |
 
 The main dashboard provides at-a-glance system monitoring:
 - **System Stats Cards** (Top Row)
@@ -131,9 +131,9 @@ Floating AI assistant for quick queries:
 
 ### Security Tab
 
-| Overview | Threat Detection |
+| | |
 |---|---|
-| ![Security Tab Screenshot](docs/screenshots/security.png) | ![Security Details Screenshot](docs/screenshots/security2.png) |
+| ![Security Tab Screenshot](docs/screenshots/security.png) | ![Security Tab Screenshot](docs/screenshots/security2.png) |
 
 System security analysis:
 - **Firewall Status** indicator
@@ -158,9 +158,9 @@ System notifications and warnings:
 
 ### Settings Tab
 
-| AI Configuration | Alert Settings |
+| | |
 |---|---|
-| ![Settings Tab Screenshot](docs/screenshots/settings.png) | ![Settings Configuration Screenshot](docs/screenshots/settings2.png) |
+| ![Settings Tab Screenshot](docs/screenshots/settings.png) | ![Settings Tab Screenshot](docs/screenshots/settings2.png) |
 
 Configuration and preferences:
 - **AI Provider Selection**
