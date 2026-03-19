@@ -2,12 +2,7 @@
 
 <div align="center">
 
-```
-╔═══════════════════════════════════════╗
-║     🧠 SysMind                       ║
-║  AI-Powered System Monitoring        ║
-╚═══════════════════════════════════════╝
-```
+![SysMind Logo](resources/icons/icon.png)
 
 **AI-powered system monitoring assistant that helps you understand what your computer is doing in real-time.**
 
