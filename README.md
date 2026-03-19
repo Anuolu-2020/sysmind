@@ -91,12 +91,6 @@ The main dashboard provides at-a-glance system monitoring:
 
 ![Dashboard Resources Screenshot](docs/screenshots/dashboard2.png)
 
-**Dashboard Features in Detail:**
-- Real-time system resource visualization with smooth animations
-- Expandable process details showing command-line arguments and file descriptors
-- Network port inspection with process associations and connection states
-- Responsive layout that adapts to different window sizes
-
 ### AI Chat Tab
 
 ![AI Chat Tab Screenshot](docs/screenshots/ai-chat.png)
@@ -151,13 +145,6 @@ System security analysis:
 
 ![Security Details Screenshot](docs/screenshots/security2.png)
 
-**Security Features in Detail:**
-- Real-time firewall status monitoring
-- AI-powered threat detection with risk scoring
-- Geographic mapping of network connections
-- Process behavioral analysis and recommendations
-- Detailed logs of security events and anomalies
-
 ### Alerts Tab
 
 ![Alerts Tab Screenshot](docs/screenshots/alerts.png)
@@ -186,15 +173,6 @@ Configuration and preferences:
   - Threshold settings for CPU, Memory, Disk
 
 ![Settings Configuration Screenshot](docs/screenshots/settings2.png)
-
-**Settings Features in Detail:**
-- Simple dropdown-based AI provider switching
-- Support for 8 different AI providers with unique configuration options
-- Real-time model availability checking
-- Secure API key storage and validation
-- Custom threshold configuration for system alerts
-- Audio notification preferences with test options
-- Theme and UI preference settings
 
 ### Theme & Design
 
