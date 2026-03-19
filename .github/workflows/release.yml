@@ -167,17 +167,12 @@ jobs:
                  -X 'sysmind/internal/version.BuildDate=${BUILD_DATE}' \
                  -X 'sysmind/internal/version.BuildUser=${BUILD_USER}'"
         
-        wails build -clean -platform ${{ matrix.platform }} $UPX_FLAG -s -ldflags "$LDFLAGS"
-      shell: bash
+        # Build the frontend explicitly before wails build
+        cd frontend
+        npm run build
+        cd ..
         
-    - name: Get binary name
-      id: binary_name
-      run: |
-        if [[ "${{ matrix.platform }}" == *"windows"* ]]; then
-          echo "binary_name=sysmind.exe" >> $GITHUB_OUTPUT
-        else
-          echo "binary_name=sysmind" >> $GITHUB_OUTPUT
-        fi
+        wails build -clean -platform ${{ matrix.platform }} $UPX_FLAG -s -ldflags "$LDFLAGS"
       shell: bash
       
     - name: Prepare release artifact
