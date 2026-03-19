@@ -1,3 +1,13 @@
+## [0.1.2] - 2026-03-19
+
+### Changes
+- Merge pull request #5 from Anuolu-2020/dev (933db5d)
+- fix: update Go version to 1.22 in release workflow (7266456)
+- fix: correct YAML syntax errors in release workflow (8070a6a)
+- Merge pull request #4 from Anuolu-2020/main (d812980)
+- fix: add Linux GTK dependencies to release workflow (0cd8a49)
+- Merge pull request #3 from Anuolu-2020/main (3235ccc)
+
 ## [0.1.1] - 2026-03-19
 
 ### Changes
