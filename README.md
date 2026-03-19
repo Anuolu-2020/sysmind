@@ -63,6 +63,9 @@ SysMind is a cross-platform desktop application built with Go and Wails that pro
 SysMind features a modern, dark-themed interface with intuitive navigation and real-time data visualization.
 
 ### Dashboard Tab
+
+![Dashboard Tab Screenshot](docs/screenshots/dashboard.png)
+
 The main dashboard provides at-a-glance system monitoring:
 - **System Stats Cards** (Top Row)
   - Real-time CPU usage with per-core breakdown
@@ -87,6 +90,9 @@ The main dashboard provides at-a-glance system monitoring:
   - View socket state and process details
 
 ### AI Chat Tab
+
+![AI Chat Tab Screenshot](docs/screenshots/ai-chat.png)
+
 Full-featured chat interface for system queries:
 - **Chat Sessions Panel**
   - Create new conversation sessions
@@ -103,6 +109,9 @@ Full-featured chat interface for system queries:
   - Multiline support for complex queries
 
 ### Quick Chat Panel (Ctrl+K)
+
+![Quick Chat Panel Screenshot](docs/screenshots/quick-chat.png)
+
 Floating AI assistant for quick queries:
 - **Floating Window**
   - Slides in from the right side
@@ -119,6 +128,9 @@ Floating AI assistant for quick queries:
   - Always-on-top positioning
 
 ### Security Tab
+
+![Security Tab Screenshot](docs/screenshots/security.png)
+
 System security analysis:
 - **Firewall Status** indicator
 - **Suspicious Process Detection**
@@ -130,6 +142,9 @@ System security analysis:
   - Helps identify unexpected outbound traffic
 
 ### Alerts Tab
+
+![Alerts Tab Screenshot](docs/screenshots/alerts.png)
+
 System notifications and warnings:
 - **Alert List** with filtering
 - **Severity Levels**: Info, Warning, Critical
@@ -138,6 +153,9 @@ System notifications and warnings:
 - **Audio/Desktop Notifications** (when enabled)
 
 ### Settings Tab
+
+![Settings Tab Screenshot](docs/screenshots/settings.png)
+
 Configuration and preferences:
 - **AI Provider Selection**
   - Choose between 8 different AI providers
@@ -150,7 +168,10 @@ Configuration and preferences:
   - Audio alert options
   - Threshold settings for CPU, Memory, Disk
 
-### Header
+### Header & Navigation
+
+![Header Screenshot](docs/screenshots/header.png)
+
 - **Title**: "SysMind" with app branding
 - **Alert Badge**: Shows active alert count (if any)
 - **AI Status**: "AI Ready" or "AI Not Configured"
@@ -158,6 +179,7 @@ Configuration and preferences:
 - **Close Button** (✕): Minimize to system tray
 
 ### Theme & Design
+
 - **Dark Theme** (Primary): Dark blue/purple palette for reduced eye strain
 - **Color Coding**:
   - Blue: Primary accent (CPU, healthy status)
