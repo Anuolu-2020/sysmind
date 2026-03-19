@@ -270,34 +270,30 @@ Configuration and preferences:
 
 ### Pre-built Releases (Recommended)
 
-Download the latest release for your platform from the [Releases](https://github.com/Anuolu-2020/sysmind/releases) page:
+Download and install the latest version for your platform:
 
-#### Linux
+#### Linux (AMD64 & ARM64)
 ```bash
-# Download and extract
-wget https://github.com/Anuolu-2020/sysmind/releases/latest/download/sysmind-v0.1.0-linux-amd64.tar.gz
-tar -xzf sysmind-v0.1.0-linux-amd64.tar.gz
-chmod +x sysmind
-./sysmind
+# One-liner to download, extract, and run the latest version
+curl -s https://api.github.com/repos/Anuolu-2020/sysmind/releases/latest \
+| grep "browser_download_url.*linux-$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" \
+| cut -d : -f 2,3 | tr -d \" | wget -qi - -O sysmind.tar.gz \
+&& tar -xzf sysmind.tar.gz && chmod +x sysmind && ./sysmind
 ```
 
-#### macOS
+#### macOS (Intel & Apple Silicon)
 ```bash
-# Intel Macs
-wget https://github.com/Anuolu-2020/sysmind/releases/latest/download/sysmind-v0.1.0-darwin-amd64.tar.gz
-tar -xzf sysmind-v0.1.0-darwin-amd64.tar.gz
-
-# Apple Silicon Macs  
-wget https://github.com/Anuolu-2020/sysmind/releases/latest/download/sysmind-v0.1.0-darwin-arm64.tar.gz
-tar -xzf sysmind-v0.1.0-darwin-arm64.tar.gz
-
-chmod +x sysmind && ./sysmind
+# One-liner to download, extract, and run the latest version
+curl -s https://api.github.com/repos/Anuolu-2020/sysmind/releases/latest \
+| grep "browser_download_url.*darwin-$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" \
+| cut -d : -f 2,3 | tr -d \" | wget -qi - -O sysmind.tar.gz \
+&& tar -xzf sysmind.tar.gz && chmod +x sysmind && ./sysmind
 ```
 
-#### Windows
-1. Download `sysmind-v0.1.0-windows-amd64.zip`
-2. Extract the ZIP file
-3. Run `sysmind.exe`
+#### Windows (AMD64)
+1. Go to the [Latest Release](https://github.com/Anuolu-2020/sysmind/releases/latest)
+2. Download `sysmind-vX.X.X-windows-amd64.zip`
+3. Extract and run `sysmind.exe`
 
 ### Build from Source
 

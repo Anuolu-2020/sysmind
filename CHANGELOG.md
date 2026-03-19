@@ -1,3 +1,8 @@
+## [0.1.10] - 2026-03-19
+
+### Changes
+- fix: handle macOS .app bundle and standalone binary in release packaging (50c0eea)
+
 ## [0.1.9] - 2026-03-19
 
 ### Changes
