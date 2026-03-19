@@ -1,3 +1,17 @@
+## [0.1.11] - 2026-03-19
+
+### Changes
+- Merge pull request #16 from Anuolu-2020/dev (26d0316)
+- fix: resolve merge conflict and ensure frontend build in release workflow (d9736b3)
+- Merge pull request #15 from Anuolu-2020/main (4e6f524)
+- Merge pull request #14 from Anuolu-2020/dev (87d11ce)
+- docs: make installation instructions dynamic for latest releases (d6a7169)
+- Merge pull request #13 from Anuolu-2020/main (a36e5c9)
+- Merge pull request #12 from Anuolu-2020/main (3f4727b)
+- Merge pull request #11 from Anuolu-2020/main (c967f57)
+- Merge pull request #10 from Anuolu-2020/main (f10eb62)
+- Merge pull request #9 from Anuolu-2020/main (66f9fb9)
+
 ## [0.1.10] - 2026-03-19
 
 ### Changes
