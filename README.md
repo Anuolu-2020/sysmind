@@ -64,7 +64,9 @@ SysMind features a modern, dark-themed interface with intuitive navigation and r
 
 ### Dashboard Tab
 
-![Dashboard Tab Screenshot](docs/screenshots/dashboard.png)
+| Main Dashboard | Process & Ports |
+|---|---|
+| ![Dashboard Tab Screenshot](docs/screenshots/dashboard.png) | ![Dashboard Resources Screenshot](docs/screenshots/dashboard2.png) |
 
 The main dashboard provides at-a-glance system monitoring:
 - **System Stats Cards** (Top Row)
@@ -88,8 +90,6 @@ The main dashboard provides at-a-glance system monitoring:
   - Port number, protocol, associated process
   - Filter connections by process name
   - View socket state and process details
-
-![Dashboard Resources Screenshot](docs/screenshots/dashboard2.png)
 
 ### AI Chat Tab
 
@@ -131,7 +131,9 @@ Floating AI assistant for quick queries:
 
 ### Security Tab
 
-![Security Tab Screenshot](docs/screenshots/security.png)
+| Overview | Threat Detection |
+|---|---|
+| ![Security Tab Screenshot](docs/screenshots/security.png) | ![Security Details Screenshot](docs/screenshots/security2.png) |
 
 System security analysis:
 - **Firewall Status** indicator
@@ -142,8 +144,6 @@ System security analysis:
   - External connections mapped to processes
   - Geographic location of remote servers
   - Helps identify unexpected outbound traffic
-
-![Security Details Screenshot](docs/screenshots/security2.png)
 
 ### Alerts Tab
 
@@ -158,7 +158,9 @@ System notifications and warnings:
 
 ### Settings Tab
 
-![Settings Tab Screenshot](docs/screenshots/settings.png)
+| AI Configuration | Alert Settings |
+|---|---|
+| ![Settings Tab Screenshot](docs/screenshots/settings.png) | ![Settings Configuration Screenshot](docs/screenshots/settings2.png) |
 
 Configuration and preferences:
 - **AI Provider Selection**
@@ -171,8 +173,6 @@ Configuration and preferences:
   - Enable/disable notifications
   - Audio alert options
   - Threshold settings for CPU, Memory, Disk
-
-![Settings Configuration Screenshot](docs/screenshots/settings2.png)
 
 ### Theme & Design
 
