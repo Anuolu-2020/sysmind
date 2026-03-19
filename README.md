@@ -89,7 +89,7 @@ The main dashboard provides at-a-glance system monitoring:
   - Filter connections by process name
   - View socket state and process details
 
-![Dashboard Resources Screenshot](docs/screenshots/dashboard-resources.png)
+![Dashboard Resources Screenshot](docs/screenshots/dashboard2.png)
 
 **Dashboard Features in Detail:**
 - Real-time system resource visualization with smooth animations
@@ -149,7 +149,7 @@ System security analysis:
   - Geographic location of remote servers
   - Helps identify unexpected outbound traffic
 
-![Security Details Screenshot](docs/screenshots/security-details.png)
+![Security Details Screenshot](docs/screenshots/security2.png)
 
 **Security Features in Detail:**
 - Real-time firewall status monitoring
@@ -185,7 +185,7 @@ Configuration and preferences:
   - Audio alert options
   - Threshold settings for CPU, Memory, Disk
 
-![Settings Configuration Screenshot](docs/screenshots/settings-configuration.png)
+![Settings Configuration Screenshot](docs/screenshots/settings2.png)
 
 **Settings Features in Detail:**
 - Simple dropdown-based AI provider switching
