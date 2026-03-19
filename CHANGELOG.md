@@ -1,3 +1,8 @@
+## [0.1.7] - 2026-03-19
+
+### Changes
+- fix: resolve windows build shell and redirection error (1232062)
+
 ## [0.1.6] - 2026-03-19
 
 ### Changes
