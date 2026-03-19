@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useErrorDialog } from '../contexts/ErrorDialogContext';
 
 function DevEnvironments() {
+  const { showError } = useErrorDialog();
   const [devInfo, setDevInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [expandedContainer, setExpandedContainer] = useState(null);
@@ -62,7 +64,8 @@ function DevEnvironments() {
       }, 1000);
     } catch (err) {
       console.error(`Error ${action}ing container:`, err);
-      alert(`Failed to ${action} container: ${err.message || err}`);
+      showError(`${action.charAt(0).toUpperCase() + action.slice(1)} Container Failed`, 
+        `Failed to ${action} container: ${err.message || err}`);
       setContainerActions(prev => {
         const updated = { ...prev };
         delete updated[containerId];

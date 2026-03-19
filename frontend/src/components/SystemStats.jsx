@@ -169,8 +169,16 @@ function MiniGraph({ data, max, color, label }) {
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
-      const width = canvas.width;
-      const height = canvas.height;
+      // Handle device pixel ratio for crisp rendering
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+
+      const width = rect.width;
+      const height = rect.height;
 
       ctx.clearRect(0, 0, width, height);
 
@@ -218,7 +226,7 @@ function MiniGraph({ data, max, color, label }) {
   return (
     <div className="mini-graph">
       {label && <span className="graph-label">{label}</span>}
-      <canvas ref={canvasRef} width={200} height={40} />
+      <canvas ref={canvasRef} />
     </div>
   );
 }

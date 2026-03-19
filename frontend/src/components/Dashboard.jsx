@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useErrorDialog } from '../contexts/ErrorDialogContext';
 import SystemStats from './SystemStats';
 import ResourceTimeline from './ResourceTimeline';
 
 function Dashboard() {
+  const { showError } = useErrorDialog();
   const [processes, setProcesses] = useState([]);
   const [ports, setPorts] = useState([]);
   const [networkUsage, setNetworkUsage] = useState([]);
@@ -227,10 +229,10 @@ Focus on practical insights and actionable recommendations.`;
       if (result.success) {
         fetchData();
       } else {
-        alert('Error: ' + result.error);
+        showError('Kill Process Failed', result.error || 'Failed to kill the process');
       }
     } catch (err) {
-      alert('Error: ' + err.message);
+      showError('Kill Process Error', err.message || 'An error occurred while killing the process');
     }
     setSelectedProcess(null);
   };
@@ -239,10 +241,10 @@ Focus on practical insights and actionable recommendations.`;
     try {
       const result = await window.go.main.App.SetProcessPriority(pid, priority);
       if (!result.success) {
-        alert('Error: ' + result.error);
+        showError('Set Priority Failed', result.error || 'Failed to set process priority');
       }
     } catch (err) {
-      alert('Error: ' + err.message);
+      showError('Set Priority Error', err.message || 'An error occurred while setting priority');
     }
   };
 

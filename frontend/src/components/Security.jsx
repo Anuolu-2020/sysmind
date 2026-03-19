@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useErrorDialog } from '../contexts/ErrorDialogContext';
 import ConnectionMap from './ConnectionMap';
 
 function Security() {
+  const { showError } = useErrorDialog();
   const [securityInfo, setSecurityInfo] = useState(null);
   const [geoSecurityInfo, setGeoSecurityInfo] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -344,13 +346,13 @@ Focus on practical security advice and risk assessment.`;
     try {
       const result = await window.go.main.App.KillProcess(pid);
       if (result.success) {
-        alert(result.message);
+        showError('Success', result.message || 'Process killed successfully');
         fetchSecurityInfo();
       } else {
-        alert('Error: ' + result.error);
+        showError('Kill Process Failed', result.error || 'Failed to kill the process');
       }
     } catch (err) {
-      alert('Error: ' + err.message);
+      showError('Kill Process Error', err.message || 'An error occurred while killing the process');
     }
   }
 }

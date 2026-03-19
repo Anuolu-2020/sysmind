@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useErrorDialog } from '../contexts/ErrorDialogContext';
 
 function Alerts() {
+  const { showError } = useErrorDialog();
   const [alerts, setAlerts] = useState([]);
   const [config, setConfig] = useState({
     cpuThreshold: 80,
@@ -10,47 +12,17 @@ function Alerts() {
     enableDesktopNotf: true,
     enableSound: false,
   });
-  const [notificationPermission, setNotificationPermission] = useState('default');
-
-  const requestNotificationPermission = useCallback(async () => {
-    if (!('Notification' in window)) {
-      return 'unsupported';
-    }
-
-    try {
-      if (Notification.permission === 'granted') {
-        setNotificationPermission('granted');
-        return 'granted';
-      }
-      const permission = await Notification.requestPermission();
-      setNotificationPermission(permission);
-      return permission;
-    } catch (err) {
-      console.error('Error requesting notification permission:', err);
-      return 'denied';
-    }
-  }, []);
 
   const fetchAlerts = useCallback(async () => {
     try {
       if (window.go?.main?.App?.GetAlerts) {
         const alertsList = await window.go.main.App.GetAlerts();
         setAlerts(alertsList || []);
-        
-        // Show desktop notifications for new undismissed alerts
-        if (alertsList && config.enableDesktopNotf && notificationPermission === 'granted') {
-          alertsList.forEach(alert => {
-            if (!alert.dismissed && !sessionStorage.getItem(`notified-${alert.id}`)) {
-              showNotification(alert.title, alert.message, alert.severity);
-              sessionStorage.setItem(`notified-${alert.id}`, 'true');
-            }
-          });
-        }
       }
     } catch (err) {
       console.error('Error fetching alerts:', err);
     }
-  }, [config.enableDesktopNotf, notificationPermission]);
+  }, []);
 
   const fetchConfig = useCallback(async () => {
     try {
@@ -66,94 +38,33 @@ function Alerts() {
   }, []);
 
   useEffect(() => {
-    if ('Notification' in window) {
-      setNotificationPermission(Notification.permission);
-    }
-
     fetchConfig();
     fetchAlerts();
     const interval = setInterval(fetchAlerts, 5000);
     return () => clearInterval(interval);
   }, [fetchAlerts, fetchConfig]);
 
-  // Listen for alert events from backend so notifications work across tabs
+  // Listen for alert events from backend for sound notifications
   useEffect(() => {
     if (!window.runtime?.EventsOn) return undefined;
 
-    const handleAlertEvent = async (payload) => {
-      const alert = payload?.alert;
-      if (!alert || alert.dismissed) return;
-
-      const desktopEnabled = payload?.enableDesktopNotf ?? config.enableDesktopNotf;
-      if (!desktopEnabled) return;
-
-      const notifiedKey = `notified-${alert.id}`;
-      if (sessionStorage.getItem(notifiedKey)) return;
-
-      let permission = notificationPermission;
-      if (permission !== 'granted') {
-        permission = await requestNotificationPermission();
-      }
-
-      if (permission === 'granted') {
-        showNotification(alert.title, alert.message, alert.severity);
-        sessionStorage.setItem(notifiedKey, 'true');
-      }
-
+    const handleAlertEvent = (payload) => {
       if (payload?.enableSound) {
-        playAlertSound(alert.severity);
-      }
-    };
-
-    const handleNotifyEvent = async (payload) => {
-      if (!config.enableDesktopNotf) return;
-      let permission = notificationPermission;
-      if (permission !== 'granted') {
-        permission = await requestNotificationPermission();
-      }
-      if (permission === 'granted' && payload?.title && payload?.message) {
-        showNotification(payload.title, payload.message, 'info');
+        const alert = payload?.alert;
+        if (alert && !alert.dismissed) {
+          playAlertSound(alert.severity);
+        }
       }
     };
 
     window.runtime.EventsOn('alerts:new', handleAlertEvent);
-    window.runtime.EventsOn('alerts:notify', handleNotifyEvent);
 
     return () => {
       if (window.runtime?.EventsOff) {
         window.runtime.EventsOff('alerts:new', handleAlertEvent);
-        window.runtime.EventsOff('alerts:notify', handleNotifyEvent);
       }
     };
-  }, [config.enableDesktopNotf, notificationPermission, requestNotificationPermission]);
-
-  const showNotification = (title, body, severity) => {
-    if ('Notification' in window && Notification.permission === 'granted') {
-      try {
-        const icon = severity === 'critical' ? '🚨' : severity === 'warning' ? '⚠️' : 'ℹ️';
-        const notification = new Notification(`${icon} ${title}`, {
-          body,
-          icon: '/icon.png',
-          badge: '/icon.png',
-          tag: title,
-          requireInteraction: severity === 'critical',
-        });
-        
-        // Auto-close after 5 seconds for non-critical alerts
-        if (severity !== 'critical') {
-          setTimeout(() => notification.close(), 5000);
-        }
-      } catch (err) {
-        console.error('Error creating notification:', err);
-      }
-    } else if ('Notification' in window && Notification.permission === 'denied') {
-      console.warn('Notifications are denied. Please enable them in browser settings.');
-    } else if ('Notification' in window && Notification.permission === 'default') {
-      console.warn('Notification permission not granted yet');
-    } else {
-      console.warn('Notification API not available');
-    }
-  };
+  }, [config.enableSound]);
 
   const playAlertSound = (severity) => {
     if (!config.enableSound) return;
@@ -218,22 +129,6 @@ function Alerts() {
     <div className="panel alerts-panel">
       <h2>System Alerts</h2>
 
-      {/* Notification Permission */}
-      {notificationPermission !== 'granted' && (
-        <div className="notification-banner">
-          <span>🔔 Desktop notifications are disabled</span>
-          <button 
-            onClick={() => {
-              Notification.requestPermission().then(permission => {
-                setNotificationPermission(permission);
-              });
-            }}
-          >
-            Enable Notifications
-          </button>
-        </div>
-      )}
-
       {/* Alert Configuration */}
       <div className="alert-config-section">
         <h3>Alert Thresholds</h3>
@@ -248,20 +143,41 @@ function Alerts() {
               Enable Alerts
             </label>
           </div>
-          <div className="form-group">
-            <label>
-              <input 
-                type="checkbox" 
-                checked={config.enableDesktopNotf}
-                onChange={(e) => setConfig({...config, enableDesktopNotf: e.target.checked})}
-                disabled={!config.enableAlerts}
-              />
-              Desktop Notifications
-            </label>
+          <div className="form-group notification-toggle-group">
+            <button 
+              className={`notification-toggle-btn ${config.enableDesktopNotf ? 'enabled' : 'disabled'}`}
+              onClick={async () => {
+                const newValue = !config.enableDesktopNotf;
+                const newConfig = {...config, enableDesktopNotf: newValue};
+                setConfig(newConfig);
+                // Auto-save when toggled
+                try {
+                  if (window.go?.main?.App?.SetAlertConfig) {
+                    await window.go.main.App.SetAlertConfig(newConfig);
+                  }
+                } catch (err) {
+                  console.error('Error saving config:', err);
+                }
+              }}
+              disabled={!config.enableAlerts}
+            >
+              {config.enableDesktopNotf ? 'Disable Notifications' : 'Enable Notifications'}
+            </button>
             {config.enableDesktopNotf && (
               <button 
                 className="test-notification-btn" 
-                onClick={() => showNotification('Test Alert', 'This is a test notification from SysMind', 'info')}
+                onClick={async () => {
+                  try {
+                    if (window.go?.main?.App?.SendTestNotification) {
+                      await window.go.main.App.SendTestNotification('Test Alert', 'This is a test notification from SysMind');
+                    } else {
+                      console.warn('SendTestNotification not available');
+                    }
+                  } catch (err) {
+                    console.error('Error sending test notification:', err);
+                    showError('Test Notification Failed', 'Failed to send notification: ' + err.message);
+                  }
+                }}
                 style={{ marginLeft: '10px', padding: '4px 8px', fontSize: '12px' }}
               >
                 Test
