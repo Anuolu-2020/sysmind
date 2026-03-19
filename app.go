@@ -1182,6 +1182,7 @@ func (a *App) startAlertMonitoring() {
 }
 
 // stopAlertMonitoring stops the alert monitoring
+// nolint:unused
 func (a *App) stopAlertMonitoring() {
 	a.mu.Lock()
 	defer a.mu.Unlock()
@@ -1383,6 +1384,7 @@ func (a *App) startInsightMonitoring() {
 }
 
 // stopInsightMonitoring stops the insight monitoring
+// nolint:unused
 func (a *App) stopInsightMonitoring() {
 	a.mu.Lock()
 	defer a.mu.Unlock()

@@ -46,7 +46,7 @@ func NewChatService() (*ChatService, error) {
 // generateID creates a unique session/message ID
 func generateID() string {
 	bytes := make([]byte, 8)
-	rand.Read(bytes)
+	_, _ = rand.Read(bytes)
 	return hex.EncodeToString(bytes)
 }
 
@@ -107,7 +107,7 @@ func (cs *ChatService) CreateSession(title string) *models.ChatSession {
 	}
 
 	cs.sessions[session.ID] = session
-	cs.saveSession(session)
+	_ = cs.saveSession(session)
 
 	return session
 }
@@ -177,7 +177,7 @@ func (cs *ChatService) AddMessage(sessionID string, role, content, riskLevel str
 		session.Title = title
 	}
 
-	cs.saveSession(session)
+	_ = cs.saveSession(session)
 
 	return &msg
 }

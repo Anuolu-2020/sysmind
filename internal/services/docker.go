@@ -473,6 +473,7 @@ func (ds *DockerService) parseNetworkValue(val string) uint64 {
 }
 
 // runCommand executes a command with timeout
+// nolint:unused
 func (ds *DockerService) runCommand(name string, args ...string) (string, error) {
 	cmd := exec.Command(name, args...)
 
@@ -494,7 +495,7 @@ func (ds *DockerService) runCommand(name string, args ...string) (string, error)
 		return string(output), nil
 	case <-time.After(10 * time.Second):
 		if cmd.Process != nil {
-			cmd.Process.Kill()
+			_ = cmd.Process.Kill()
 		}
 		return "", fmt.Errorf("docker command timed out after 10 seconds")
 	}
@@ -516,7 +517,7 @@ func (ds *DockerService) runCommandSimple(name string, args ...string) error {
 		return err
 	case <-time.After(10 * time.Second):
 		if cmd.Process != nil {
-			cmd.Process.Kill()
+			_ = cmd.Process.Kill()
 		}
 		return fmt.Errorf("docker command timed out after 10 seconds")
 	}

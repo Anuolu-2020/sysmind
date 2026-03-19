@@ -16,7 +16,7 @@ go.work
 *.out
 
 # Go mod cache
-go.sum
+# go.sum should be committed
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
@@ -25,6 +25,7 @@ go.sum
 build/
 app.syso
 wails.json.backup*
+sysmind.desktop
 
 # Frontend dependencies
 frontend/node_modules/
