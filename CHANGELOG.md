@@ -1,3 +1,23 @@
+## [0.2.1] - 2026-03-19
+
+### Changes
+- Merge pull request #22 from Anuolu-2020/dev (a4e2f41)
+- chore: bump version to 0.1.13 (177c5fe)
+- fix(windows): hide console windows when executing external commands (a447417)
+
+## [0.2.0] - 2026-03-19
+
+### Changes
+- Merge pull request #21 from Anuolu-2020/dev (f4ab679)
+- fix: resolve YAML syntax error in release workflow changelog generation (67bcc81)
+- fix: rewrite changelog generation using github-script to avoid YAML escaping issues (9c46eb2)
+- Merge pull request #20 from Anuolu-2020/dev (8f8bbc0)
+- fix: resolve YAML syntax error by using quoted heredoc and placeholder replacement (58fce59)
+- Merge pull request #19 from Anuolu-2020/main (4cb4d94)
+- Merge branch 'dev' (56f941e)
+- fix: resolve YAML syntax error in release.yml heredoc (d8ba7a1)
+- Merge pull request #18 from Anuolu-2020/main (2d6c817)
+
 ## [0.1.13] - 2026-03-19
 
 ### Changes
