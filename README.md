@@ -53,7 +53,81 @@ SysMind is a cross-platform desktop application built with Go and Wails that pro
 - **Local LLM**: Ollama support (Llama 3, Mistral, Code Llama, etc.)
 - **Flexible Configuration**: Easy switching between providers
 
-### 🌍 **Cross-Platform**
+## 🔐 Privacy & Data Sharing
+
+SysMind is designed with your privacy in mind. You have complete control over what system information is shared with your AI provider.
+
+### Data Collection Transparency
+
+SysMind collects the following system data for analysis:
+- **Process Information**: Running process names, CPU/memory usage
+- **Network Information**: Open ports, listening services, remote IP connections
+- **System Statistics**: Overall CPU, memory, and disk usage percentages
+- **Security Alerts**: Firewall status and suspicious process detection
+
+### Data Privacy Assurances
+
+The following information is **NEVER collected or shared**:
+- ✅ Command line arguments
+- ✅ Usernames and user IDs
+- ✅ File contents or paths
+- ✅ Passwords or authentication tokens
+- ✅ Environment variables
+- ✅ SSL/TLS certificates
+
+### Privacy Settings
+
+SysMind includes granular privacy controls in Settings → Privacy & Data Sharing:
+
+#### Data Sharing Controls
+1. **Share Process Names** - Allow AI to see what programs are running
+2. **Share Process Details** - Allow AI to see CPU/memory per process
+3. **Share Network Ports** - Allow AI to see open ports and listening services
+4. **Share Connection IPs** - Allow AI to see remote IP addresses
+5. **Share Connection Locations** - Allow AI to see geographic location of connections
+6. **Share Security Alerts** - Allow AI to see security warnings and suspicious processes
+7. **Share System Statistics** - Allow AI to see overall CPU/memory/disk percentages
+
+#### Anonymization Options
+- **Anonymize Process Names** - Replace real process names with categories:
+  - `[Browser]` - Firefox, Chrome, Safari, Edge, Brave, etc.
+  - `[Dev Tool]` - Code, Node, Python, Git, etc.
+  - `[Communication]` - Slack, Teams, Discord, Zoom
+  - `[Media]` - Spotify, VLC, etc.
+  - `[System]` - System processes
+  - `[Database]` - PostgreSQL, MySQL, Redis
+  - `[Application]` - Other applications
+
+- **Anonymize Connection IPs** - Replace IP addresses with service categories:
+  - `[Google Services]` - Google, YouTube, etc.
+  - `[AWS Cloud]` - Amazon Web Services
+  - `[Microsoft/Azure]` - Microsoft and Azure services
+  - `[Cloudflare CDN]` - Cloudflare CDN
+  - `[Fastly CDN]` - Fastly CDN
+  - `[GitHub]` - GitHub services
+  - `[Meta/Facebook]` - Meta and Facebook services
+  - `[External Server]` - Unknown services
+
+### Default Behavior
+
+By default, all privacy settings are enabled (data sharing turned on, anonymization off) for optimal AI analysis while maintaining transparency:
+- All system data is shared with your AI provider
+- Process names and IP addresses are shared in their original form
+- You can customize these settings at any time
+
+### How to Use Privacy Settings
+
+1. Open SysMind and go to **Settings**
+2. Scroll to **Privacy & Data Sharing** section
+3. Toggle individual settings to control what data is shared:
+   - ✓ Checkmark = Data is shared
+   - ✗ Unchecked = Data is NOT shared
+4. Enable anonymization options to replace sensitive information with categories
+5. Click **Save Privacy Settings** to apply your preferences
+
+When anonymization is enabled, SysMind intelligently replaces specific information with categories while maintaining analytical value for AI insights.
+
+### 🌍 Cross-Platform
 - **Linux**: Native `/proc` filesystem integration
 - **macOS**: Uses `lsof` and system APIs  
 - **Windows**: Leverages `netstat` and WMI
