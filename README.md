@@ -41,11 +41,15 @@ SysMind is a cross-platform desktop application built with Go and Wails that pro
 - **Performance Optimization**: Recommendations for system improvements
 - **Quick Chat (Ctrl+K)**: Floating AI assistant panel for quick queries without leaving current tab
 - **Chat Sessions**: Create, manage, and switch between multiple conversation sessions
-- **Disk Monitoring**: AI has access to disk usage and storage capacity information
 
 ### 🔌 **AI Provider Support**
 - **OpenAI**: GPT-4, GPT-4 Turbo, GPT-3.5 Turbo
+- **Anthropic**: Claude 3.5 Sonnet, Claude 3 Opus, Claude 3 Haiku
+- **Google Gemini**: Gemini 2.0 Flash, Gemini 1.5 Pro, Gemini 1.5 Flash
+- **GitHub Copilot**: GPT-4o with GitHub Copilot subscription
 - **Cloudflare Workers AI**: Llama 3.1, Llama 3, Mistral 7B
+- **Zhipu GLM (Z.AI)**: GLM-4-Plus, GLM-4-Air, GLM-4-Long
+- **Moonshot Kimi**: Moonshot-v1-8k, Moonshot-v1-32k, Moonshot-v1-128k
 - **Local LLM**: Ollama support (Llama 3, Mistral, Code Llama, etc.)
 - **Flexible Configuration**: Easy switching between providers
 
@@ -135,6 +139,37 @@ make build
 2. Pull a model: `ollama pull llama3.1`
 3. Start server: `ollama serve`  
 4. Select "Local LLM" in Settings (endpoint: `http://localhost:11434`)
+
+### Anthropic Claude Setup
+1. Get your API key from [Anthropic Console](https://console.anthropic.com/account/keys)
+2. Open SysMind → Settings
+3. Select "Anthropic" as provider
+4. Enter your API key and choose model (Claude 3.5 Sonnet recommended)
+
+### Google Gemini Setup
+1. Get your API key from [Google AI Studio](https://aistudio.google.com/apikey)
+2. Open SysMind → Settings
+3. Select "Google Gemini" as provider
+4. Enter your API key and choose model (Gemini 2.0 Flash recommended)
+
+### GitHub Copilot Setup
+1. Ensure you have a [GitHub Copilot subscription](https://github.com/features/copilot)
+2. Get your authentication token (via GitHub CLI or personal access token)
+3. Open SysMind → Settings
+4. Select "GitHub Copilot" as provider
+5. Enter your token and choose model
+
+### Zhipu GLM (Z.AI) Setup
+1. Get your API key from [Z.AI Platform](https://www.bigmodel.cn/usercenter/apikeys)
+2. Open SysMind → Settings
+3. Select "Zhipu GLM" as provider
+4. Enter your API key and choose model (GLM-4-Plus recommended)
+
+### Moonshot Kimi Setup
+1. Get your API key from [Moonshot Console](https://console.moonshot.cn/api-keys)
+2. Open SysMind → Settings
+3. Select "Moonshot Kimi" as provider
+4. Enter your API key and choose model (Moonshot-v1-8k recommended)
 
 ## 💡 Usage
 
@@ -226,14 +261,7 @@ make dev          # Start development server
 make test         # Run tests
 make lint         # Run linters
 make clean        # Clean build artifacts
-
-# Release management
-make version-check          # Check current version
-make release VERSION=1.2.3  # Create new release
 ```
-
-For detailed build instructions, see [RELEASE.md](RELEASE.md).
-
 ## 🤝 Contributing
 
 We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
@@ -250,20 +278,6 @@ make setup
 # Start development
 make dev
 ```
-
-### Release Process
-For maintainers releasing new versions:
-
-```bash
-# Check what's changed since last release
-make version-check
-
-# Create a new release (automated)
-make release VERSION=1.2.3
-```
-
-See [RELEASE.md](RELEASE.md) for complete release documentation.
-
 ### Areas for Contribution
 - 🐛 Bug fixes and performance improvements
 - ✨ New features and AI integrations
@@ -287,14 +301,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - 🐛 **Bug Reports**: [Open an issue](https://github.com/Anuolu-2020/sysmind/issues)
 - 💡 **Feature Requests**: [Discussions](https://github.com/Anuolu-2020/sysmind/discussions)  
-- 📧 **Contact**: [anuolu2020@gmail.com](mailto:anuolu2020@gmail.com)
-
 ---
 
 <div align="center">
 
 **⭐ If you find SysMind useful, please consider giving it a star!**
-
-Made with ❤️ by the open source community
 
 </div>
