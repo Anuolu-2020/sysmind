@@ -1,3 +1,8 @@
+## [0.1.9] - 2026-03-19
+
+### Changes
+- fix: ensure Build application step uses bash on all platforms (6cd059c)
+
 ## [0.1.8] - 2026-03-19
 
 ### Changes

@@ -185,6 +185,13 @@ jobs:
         cd build/bin
         if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
           7z a "sysmind-${{ needs.create-release.outputs.tag_name }}-${{ matrix.name }}.zip" sysmind.exe
+        elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
+          # On macOS, Wails builds an app bundle by default when packaging
+          if [ -d "sysmind.app" ]; then
+            tar -czf "sysmind-${{ needs.create-release.outputs.tag_name }}-${{ matrix.name }}.tar.gz" sysmind.app
+          else
+            tar -czf "sysmind-${{ needs.create-release.outputs.tag_name }}-${{ matrix.name }}.tar.gz" sysmind
+          fi
         else
           tar -czf "sysmind-${{ needs.create-release.outputs.tag_name }}-${{ matrix.name }}.tar.gz" sysmind
         fi
