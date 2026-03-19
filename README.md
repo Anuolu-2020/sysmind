@@ -179,10 +179,6 @@ Full-featured chat interface for system queries:
   - AI responses on the left with clear formatting
   - Real-time streaming responses
   - Loading spinner while AI is thinking
-- **Input Area**
-  - Single-line message input
-  - Send button or press Enter to submit
-  - Multiline support for complex queries
 
 ### Quick Chat Panel (Ctrl+K)
 
@@ -197,11 +193,6 @@ Floating AI assistant for quick queries:
   - Hamburger icon (☰) to access chat sessions
   - Quick dropdown list of previous chats
   - Switch sessions without closing panel
-- **Compact Interface**
-  - Minimalist design with essential controls
-  - Close button (✕) to hide panel
-  - Escape key to dismiss
-  - Always-on-top positioning
 
 ### Security Tab
 
