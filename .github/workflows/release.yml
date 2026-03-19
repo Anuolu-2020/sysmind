@@ -196,64 +196,51 @@ jobs:
         fetch-depth: 0
         
     - name: Generate changelog and update release
-      uses: actions/github-script@v6
-      with:
-        script: |
-          const { execSync } = require('child_process');
-          
-          const tagName = '${{ needs.create-release.outputs.tag_name }}';
-          const releaseId = '${{ needs.create-release.outputs.release_id }}';
-          const repo = '${{ github.repository }}';
-          
-          // Get previous tag
-          let changelog = '';
-          try {
-            const tags = execSync('git tag --sort=-version:refname').toString().trim().split('\n');
-            const prevTag = tags.find(t => t !== tagName);
-            
-            if (prevTag) {
-              changelog = execSync(`git log --pretty=format:"* %s (%h)" ${prevTag}..${tagName}`).toString().trim();
-            } else {
-              changelog = execSync(`git log --pretty=format:"* %s (%h)" ${tagName}`).toString().trim();
-            }
-          } catch (e) {
-            changelog = '* Initial release';
-          }
-          
-          const body = `## What's New in ${tagName}
-
-${changelog}
-
-## Downloads
-
-Choose the appropriate binary for your platform:
-
-### Linux
-- **AMD64**: \`sysmind-${tagName}-linux-amd64.tar.gz\`
-
-### macOS  
-- **Intel**: \`sysmind-${tagName}-darwin-amd64.tar.gz\`
-- **Apple Silicon**: \`sysmind-${tagName}-darwin-arm64.tar.gz\`
-
-### Windows
-- **AMD64**: \`sysmind-${tagName}-windows-amd64.zip\`
-
-## Installation
-
-1. Download the appropriate binary for your platform
-2. Extract the archive
-3. Run the \`sysmind\` executable
-
-For detailed setup instructions, see the [README](https://github.com/${repo}/blob/main/README.md).
-
-## Verification
-
-All binaries are automatically built and signed by GitHub Actions.
-`;
-
-          await github.rest.repos.updateRelease({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            release_id: releaseId,
-            body: body
-          });
+      env:
+        TAG_NAME: ${{ needs.create-release.outputs.tag_name }}
+        RELEASE_ID: ${{ needs.create-release.outputs.release_id }}
+        REPO_NAME: ${{ github.repository }}
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      shell: bash
+      run: |
+        PREV_TAG=$(git tag --sort=-version:refname | grep -v "${TAG_NAME}" | head -n1)
+        
+        if [ -n "$PREV_TAG" ]; then
+          CHANGELOG=$(git log --pretty=format:"* %s (%h)" ${PREV_TAG}..${TAG_NAME})
+        else
+          CHANGELOG=$(git log --pretty=format:"* %s (%h)" ${TAG_NAME})
+        fi
+        
+        cat > /tmp/release_body.md << ENDOFBODY
+        ## What's New in ${TAG_NAME}
+        
+        ${CHANGELOG}
+        
+        ## Downloads
+        
+        Choose the appropriate binary for your platform:
+        
+        ### Linux
+        - **AMD64**: sysmind-${TAG_NAME}-linux-amd64.tar.gz
+        
+        ### macOS
+        - **Intel**: sysmind-${TAG_NAME}-darwin-amd64.tar.gz
+        - **Apple Silicon**: sysmind-${TAG_NAME}-darwin-arm64.tar.gz
+        
+        ### Windows
+        - **AMD64**: sysmind-${TAG_NAME}-windows-amd64.zip
+        
+        ## Installation
+        
+        1. Download the appropriate binary for your platform
+        2. Extract the archive
+        3. Run the sysmind executable
+        
+        For detailed setup instructions, see the [README](https://github.com/${REPO_NAME}/blob/main/README.md).
+        
+        ## Verification
+        
+        All binaries are automatically built and signed by GitHub Actions.
+        ENDOFBODY
+        
+        gh release edit "${TAG_NAME}" --notes-file /tmp/release_body.md
