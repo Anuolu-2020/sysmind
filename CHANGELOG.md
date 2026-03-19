@@ -1,3 +1,10 @@
+## [0.1.13] - 2026-03-19
+
+### Changes
+- Merge branch 'dev' (c247a5a)
+- fix: repair changelog generation and remove linux-arm64 from release body (bfc29ba)
+- Merge pull request #17 from Anuolu-2020/main (3401e47)
+
 ## [0.1.12] - 2026-03-19
 
 ### Changes
