@@ -1,3 +1,10 @@
+## [0.2.2] - 2026-03-19
+
+### Changes
+- Merge pull request #24 from Anuolu-2020/dev (0ae67b3)
+- fix: export Cmd type alias from exec package (f12b00a)
+- fix: export Cmd type alias from exec package (e8a4b74)
+
 ## [0.2.1] - 2026-03-19
 
 ### Changes
