@@ -12,7 +12,7 @@ LDFLAGS = -X 'sysmind/internal/version.Version=$(VERSION)' \
           -X 'sysmind/internal/version.BuildDate=$(BUILD_DATE)' \
           -X 'sysmind/internal/version.BuildUser=$(BUILD_USER)'
 
-.PHONY: help install dev build test clean lint release version-check
+.PHONY: help install dev build test clean lint release version-check install-linux install-user
 
 # Default target
 help: ## Show this help message
@@ -34,11 +34,13 @@ build: ## Build for production
 	@echo "🏗️ Building for production..."
 	@echo "Version: $(VERSION)"
 	@echo "Commit: $(shell echo $(GIT_COMMIT) | cut -c1-8)"
+	./scripts/generate-desktop-file.sh .
 	wails build -clean -upx -s -ldflags "$(LDFLAGS)"
 
 build-dev: ## Build for development
 	@echo "🏗️ Building for development..."
 	@echo "Version: $(VERSION)"
+	./scripts/generate-desktop-file.sh .
 	wails build -ldflags "$(LDFLAGS)"
 
 test: ## Run all tests
@@ -99,11 +101,52 @@ deps-update: ## Update dependencies
 cross-build: ## Build for all platforms
 	@echo "🌍 Building for all platforms..."
 	@echo "Version: $(VERSION)"
+	./scripts/generate-desktop-file.sh .
 	wails build -clean -platform linux/amd64 -upx -s -ldflags "$(LDFLAGS)"
 	wails build -clean -platform linux/arm64 -upx -s -ldflags "$(LDFLAGS)"
 	wails build -clean -platform darwin/amd64 -upx -s -ldflags "$(LDFLAGS)"
 	wails build -clean -platform darwin/arm64 -upx -s -ldflags "$(LDFLAGS)"
 	wails build -clean -platform windows/amd64 -upx -s -ldflags "$(LDFLAGS)"
+
+install-user: build ## Install for current user (~/.local)
+	@echo "📦 Installing SysMind for user..."
+	@mkdir -p $$HOME/.local/bin
+	@mkdir -p $$HOME/.local/share/applications
+	@mkdir -p $$HOME/.local/share/pixmaps
+	@cp build/bin/sysmind $$HOME/.local/bin/
+	@cp build/icons/icon_512.png $$HOME/.local/share/pixmaps/sysmind.png
+	@./scripts/generate-desktop-file.sh $$HOME/.local
+	@cp sysmind.desktop $$HOME/.local/share/applications/
+	@echo "✅ Installed to $$HOME/.local/"
+	@echo "   Run 'export PATH=$$PATH:$$HOME/.local/bin' to add to PATH"
+
+install-system: build ## Install system-wide (requires sudo)
+	@echo "📦 Installing SysMind system-wide..."
+	@echo "This requires sudo. You will be prompted for your password."
+	sudo mkdir -p /usr/local/bin
+	sudo mkdir -p /usr/local/share/applications
+	sudo mkdir -p /usr/local/share/pixmaps
+	sudo cp build/bin/sysmind /usr/local/bin/
+	sudo cp build/icons/icon_512.png /usr/local/share/pixmaps/sysmind.png
+	sudo ./scripts/generate-desktop-file.sh /usr/local
+	sudo cp sysmind.desktop /usr/local/share/applications/
+	sudo update-desktop-database /usr/local/share/applications 2>/dev/null || true
+	@echo "✅ Installed to /usr/local/"
+
+uninstall-user: ## Remove user installation
+	@echo "🗑️  Uninstalling SysMind from user directory..."
+	@rm -f $$HOME/.local/bin/sysmind
+	@rm -f $$HOME/.local/share/pixmaps/sysmind.png
+	@rm -f $$HOME/.local/share/applications/sysmind.desktop
+	@echo "✅ User installation removed"
+
+uninstall-system: ## Remove system installation (requires sudo)
+	@echo "🗑️  Uninstalling SysMind from system..."
+	sudo rm -f /usr/local/bin/sysmind
+	sudo rm -f /usr/local/share/pixmaps/sysmind.png
+	sudo rm -f /usr/local/share/applications/sysmind.desktop
+	sudo update-desktop-database /usr/local/share/applications 2>/dev/null || true
+	@echo "✅ System installation removed"
 
 setup: install ## Initial project setup
 	@echo "🚀 Setting up SysMind development environment..."
