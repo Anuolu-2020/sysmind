@@ -45,11 +45,13 @@ build-dev: ## Build for development
 
 test: ## Run all tests
 	@echo "🧪 Running tests..."
+	cd frontend && npm run build
 	go test -v -race ./...
 	cd frontend && npm test -- --watchAll=false
 
 test-coverage: ## Run tests with coverage
 	@echo "📊 Running tests with coverage..."
+	cd frontend && npm run build
 	go test -v -race -coverprofile=coverage.out ./...
 	go tool cover -html=coverage.out -o coverage.html
 	@echo "Coverage report generated: coverage.html"
