@@ -1,0 +1,31 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.1.0] - 2026-03-19
+
+### Changes
+- Merge pull request #2 from Anuolu-2020/dev (f2ae086)
+- chore: add RELEASE.md to .gitignore (833e492)
+- docs: Update README with logo instead of ASCII art (e0ad50a)
+- feat: copy icons to build directory (7173d87)
+- feat: add application icons (a323b37)
+- docs(README): update README with ASCII art and emoji headings (b898950)
+- feat: pass privacy config to GenerateResponse (b25932a)
+- feat: Add privacy and data sharing documentation (b12c652)
+- feat: add privacy configuration (c5dc166)
+- feat(models): add PrivacyConfig struct for AI data sharing settings (6432495)
+- feat(ai): Add privacy configuration to AI providers (dc8233e)
+- chore: Remove unnecessary Babel dependencies (c0a1975)
+- feat(models): add PrivacyConfig model (679b493)
+- feat(wailsjs): add privacy config functions (f7b0575)
+- feat: add Privacy Settings component (28fb59c)
+- Merge pull request #1 from Anuolu-2020/dev (2c40ed8)
+- chore: remove codeql sarif upload (4578b1c)
+- fix: replace deprecated gosec action with direct installation (4ca83a1)
+- fix: resolve all golangci-lint errors (7862a49)
+- fix: build frontend before golangci-lint in CI workflow (910efa2)
+
