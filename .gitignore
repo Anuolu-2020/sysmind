@@ -25,6 +25,7 @@ go.sum
 build/
 app.syso
 wails.json.backup*
+sysmind.desktop
 
 # Frontend dependencies
 frontend/node_modules/
