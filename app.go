@@ -252,10 +252,12 @@ func (a *App) AskAI(question string) map[string]interface{} {
 		}
 	}
 
+	privacyConfig := a.configService.GetPrivacyConfig()
+
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	response, err := provider.GenerateResponse(ctx, question, cachedCtx)
+	response, err := provider.GenerateResponse(ctx, question, cachedCtx, privacyConfig)
 	if err != nil {
 		return map[string]interface{}{
 			"success": false,
@@ -333,8 +335,9 @@ Be concise but informative.`,
 
 	// Get lightweight system context
 	systemCtx := a.GetSystemContext()
+	privacyConfig := a.configService.GetPrivacyConfig()
 
-	response, err := provider.GenerateResponse(ctx, question, systemCtx)
+	response, err := provider.GenerateResponse(ctx, question, systemCtx, privacyConfig)
 	if err != nil {
 		return map[string]interface{}{
 			"success": false,
@@ -410,8 +413,9 @@ Be concise but informative.`,
 
 	// Get lightweight system context
 	systemCtx := a.GetSystemContext()
+	privacyConfig := a.configService.GetPrivacyConfig()
 
-	response, err := provider.GenerateResponse(ctx, question, systemCtx)
+	response, err := provider.GenerateResponse(ctx, question, systemCtx, privacyConfig)
 	if err != nil {
 		return map[string]interface{}{
 			"success": false,
@@ -469,8 +473,9 @@ Focus on practical insights and actionable recommendations.`
 		SecurityInfo: securityInfo,
 		Timestamp:    time.Now(),
 	}
+	privacyConfig := a.configService.GetPrivacyConfig()
 
-	response, err := provider.GenerateResponse(ctx, question, systemCtx)
+	response, err := provider.GenerateResponse(ctx, question, systemCtx, privacyConfig)
 	if err != nil {
 		return map[string]interface{}{
 			"success": false,
@@ -557,8 +562,9 @@ Be specific about the IP address and location if recognizable.`,
 		SecurityInfo: securityInfo,
 		Timestamp:    time.Now(),
 	}
+	privacyConfig := a.configService.GetPrivacyConfig()
 
-	response, err := provider.GenerateResponse(ctx, question, systemCtx)
+	response, err := provider.GenerateResponse(ctx, question, systemCtx, privacyConfig)
 	if err != nil {
 		return map[string]interface{}{
 			"success": false,
@@ -608,7 +614,8 @@ func (a *App) SendChatMessage(sessionID, question string) map[string]interface{}
 	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 	defer cancel()
 
-	response, err := provider.GenerateResponse(ctx, question, cachedCtx)
+	privacyConfig := a.configService.GetPrivacyConfig()
+	response, err := provider.GenerateResponse(ctx, question, cachedCtx, privacyConfig)
 	if err != nil {
 		errMsg := a.chatService.AddMessage(sessionID, "error", err.Error(), "")
 		return map[string]interface{}{
@@ -673,7 +680,8 @@ func (a *App) SendChatMessageStreaming(sessionID, question string) map[string]in
 			"messageID": userMsg.ID,
 		})
 
-		response, err := provider.GenerateResponse(ctx, question, cachedCtx)
+		privacyConfig := a.configService.GetPrivacyConfig()
+		response, err := provider.GenerateResponse(ctx, question, cachedCtx, privacyConfig)
 		if err != nil {
 			runtime.EventsEmit(a.ctx, "chat:stream:error", map[string]interface{}{
 				"sessionID": sessionID,
@@ -1429,6 +1437,26 @@ func (a *App) generateInsights() {
 				})
 			}
 		}
+	}
+}
+
+// GetPrivacyConfig returns the current privacy configuration
+func (a *App) GetPrivacyConfig() models.PrivacyConfig {
+	return a.configService.GetPrivacyConfig()
+}
+
+// SetPrivacyConfig saves the privacy configuration
+func (a *App) SetPrivacyConfig(config models.PrivacyConfig) map[string]interface{} {
+	err := a.configService.SetPrivacyConfig(config)
+	if err != nil {
+		return map[string]interface{}{
+			"success": false,
+			"error":   err.Error(),
+		}
+	}
+	return map[string]interface{}{
+		"success": true,
+		"config":  config,
 	}
 }
 
