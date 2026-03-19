@@ -1,3 +1,8 @@
+## [0.1.4] - 2026-03-19
+
+### Changes
+- fix: use arm64 runner for linux-arm64 release builds (d4c8c1a)
+
 ## [0.1.3] - 2026-03-19
 
 ### Changes
