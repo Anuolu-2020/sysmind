@@ -7,6 +7,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/gen2brain/beeep"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 	"sysmind/internal/ai"
 	"sysmind/internal/collectors"
@@ -195,6 +196,14 @@ func (a *App) GetSystemContext() models.SystemContext {
 	network, _ := a.collector.GetNetworkUsage()
 	cpu, mem, _ := a.collector.GetSystemStats()
 
+	// Get disk usage from detailed stats
+	var diskUsage, diskUsedGB, diskTotalGB float64
+	if detailedStats, err := a.collector.GetDetailedStats(); err == nil && detailedStats != nil {
+		diskUsage = detailedStats.DiskPercent
+		diskUsedGB = detailedStats.DiskUsedGB
+		diskTotalGB = detailedStats.DiskTotalGB
+	}
+
 	// Include security information with geo-located connections
 	securityInfo, _ := a.collector.GetSecurityInfo()
 	if securityInfo != nil && len(securityInfo.UnknownConns) > 0 {
@@ -208,6 +217,9 @@ func (a *App) GetSystemContext() models.SystemContext {
 		Network:      network,
 		CPUUsage:     cpu,
 		MemUsage:     mem,
+		DiskUsage:    diskUsage,
+		DiskUsedGB:   diskUsedGB,
+		DiskTotalGB:  diskTotalGB,
 		Timestamp:    time.Now(),
 		SecurityInfo: securityInfo, // Add security info to context
 	}
@@ -840,9 +852,9 @@ func (a *App) GetSecurityInfoWithGeo() *models.SecurityInfo {
 		return &models.SecurityInfo{}
 	}
 
-	// Enrich connections with geo data in background
+	// Enrich connections with geo data synchronously so they're available in the response
 	if len(info.UnknownConns) > 0 {
-		a.enrichConnectionsWithGeoAsync(info.UnknownConns)
+		a.enrichConnectionsWithGeo(info.UnknownConns)
 	}
 
 	return info
@@ -900,23 +912,6 @@ func (a *App) enrichConnectionsWithGeo(conns []models.ConnectionInfo) {
 			conns[i].City = geoData.City
 			conns[i].Latitude = geoData.Latitude
 			conns[i].Longitude = geoData.Longitude
-		}
-	}
-}
-
-// enrichConnectionsWithGeoAsync enriches connections in background
-func (a *App) enrichConnectionsWithGeoAsync(conns []models.ConnectionInfo) {
-	// Limit to max 5 connections to avoid too many API calls
-	maxConns := len(conns)
-	if maxConns > 5 {
-		maxConns = 5
-	}
-
-	for i := 0; i < maxConns; i++ {
-		geoData, err := a.geoIPService.LookupIP(conns[i].RemoteAddr)
-		if err == nil && geoData != nil {
-			// Note: This won't update the current response, but will be cached for next call
-			// This is acceptable since Security tab refreshes every 10s
 		}
 	}
 }
@@ -1294,19 +1289,43 @@ func (a *App) addAlert(alert models.Alert) {
 	}
 }
 
-// sendNotification sends a desktop notification
+// sendNotification sends a desktop notification using native system notifications
 func (a *App) sendNotification(title, message string) {
 	if a.ctx == nil {
 		return
 	}
 
-	// Emit fallback event for frontend-side notifications.
-	// This works cross-platform in the webview and does not depend on
-	// a specific native notification API behavior.
+	// Send native desktop notification using beeep (cross-platform)
+	// This works on Linux (via libnotify/dbus), macOS (via osascript), and Windows (via toast)
+	go func() {
+		err := beeep.Notify("SysMind: "+title, message, "")
+		if err != nil {
+			// Log error but don't fail - notification is not critical
+			fmt.Printf("Failed to send notification: %v\n", err)
+		}
+	}()
+
+	// Also emit event to frontend as fallback
 	runtime.EventsEmit(a.ctx, "alerts:notify", map[string]interface{}{
 		"title":   title,
 		"message": message,
 	})
+}
+
+// SendTestNotification sends a test notification to verify the notification system works
+func (a *App) SendTestNotification(title, message string) error {
+	if title == "" {
+		title = "Test Notification"
+	}
+	if message == "" {
+		message = "This is a test notification from SysMind"
+	}
+
+	err := beeep.Notify("SysMind: "+title, message, "")
+	if err != nil {
+		return fmt.Errorf("failed to send notification: %w", err)
+	}
+	return nil
 }
 
 // === Auto Insights Methods ===
@@ -1353,8 +1372,8 @@ func (a *App) startInsightMonitoring() {
 	a.insightMonitorOn = true
 	a.mu.Unlock()
 
-	// Check every 30 seconds for insights (less frequent to reduce noise)
-	a.insightTicker = time.NewTicker(30 * time.Second)
+	// Check every 60 seconds for insights (less frequent to reduce noise and improve accuracy)
+	a.insightTicker = time.NewTicker(60 * time.Second)
 
 	go func() {
 		for range a.insightTicker.C {
@@ -1424,4 +1443,25 @@ func (a *App) GetVersionString() string {
 // GetShortVersion returns a short version string
 func (a *App) GetShortVersion() string {
 	return version.Short()
+}
+
+// MinimizeToTray hides the window to system tray
+func (a *App) MinimizeToTray() {
+	if a.ctx != nil {
+		runtime.Hide(a.ctx)
+	}
+}
+
+// ShowFromTray shows the window from system tray
+func (a *App) ShowFromTray() {
+	if a.ctx != nil {
+		runtime.Show(a.ctx)
+	}
+}
+
+// QuitApp gracefully shuts down the application
+func (a *App) QuitApp() {
+	if a.ctx != nil {
+		runtime.Quit(a.ctx)
+	}
 }
