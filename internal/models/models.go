@@ -186,6 +186,20 @@ type AIConfig struct {
 	LocalEndpoint  string `json:"localEndpoint"`  // Local LLM endpoint (e.g., http://localhost:11434)
 }
 
+// PrivacyConfig contains privacy settings for AI data sharing
+type PrivacyConfig struct {
+	// What data to share with AI providers
+	ShareProcessNames    bool `json:"shareProcessNames"`    // Share process names (e.g., "firefox", "code")
+	ShareProcessDetails  bool `json:"shareProcessDetails"`  // Share CPU/memory usage per process
+	ShareNetworkPorts    bool `json:"shareNetworkPorts"`    // Share open ports and listening services
+	ShareConnectionIPs   bool `json:"shareConnectionIPs"`   // Share remote IP addresses
+	ShareConnectionGeo   bool `json:"shareConnectionGeo"`   // Share geographic location of connections
+	ShareSecurityInfo    bool `json:"shareSecurityInfo"`    // Share security alerts and suspicious process info
+	ShareSystemStats     bool `json:"shareSystemStats"`     // Share CPU/Memory/Disk percentages (basic stats)
+	AnonymizeProcesses   bool `json:"anonymizeProcesses"`   // Replace process names with categories
+	AnonymizeConnections bool `json:"anonymizeConnections"` // Replace IPs with provider categories (e.g., "CDN", "Cloud")
+}
+
 // AIResponse represents a structured response from the AI
 type AIResponse struct {
 	Explanation string   `json:"explanation"`

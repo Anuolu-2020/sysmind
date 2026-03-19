@@ -34,12 +34,18 @@ build: ## Build for production
 	@echo "🏗️ Building for production..."
 	@echo "Version: $(VERSION)"
 	@echo "Commit: $(shell echo $(GIT_COMMIT) | cut -c1-8)"
+	@mkdir -p build/icons
+	@cp resources/icons/icon_512.png build/icons/icon_512.png 2>/dev/null || echo "Icon not found in resources/icons"
+	@cp resources/icons/icon.ico build/icons/icon.ico 2>/dev/null || echo "ICO file not found in resources/icons"
 	./scripts/generate-desktop-file.sh .
 	wails build -clean -upx -s -ldflags "$(LDFLAGS)"
 
 build-dev: ## Build for development
 	@echo "🏗️ Building for development..."
 	@echo "Version: $(VERSION)"
+	@mkdir -p build/icons
+	@cp resources/icons/icon_512.png build/icons/icon_512.png 2>/dev/null || echo "Icon not found in resources/icons"
+	@cp resources/icons/icon.ico build/icons/icon.ico 2>/dev/null || echo "ICO file not found in resources/icons"
 	./scripts/generate-desktop-file.sh .
 	wails build -ldflags "$(LDFLAGS)"
 

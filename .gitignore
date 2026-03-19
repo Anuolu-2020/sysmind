@@ -26,6 +26,7 @@ build/
 app.syso
 wails.json.backup*
 sysmind.desktop
+RELEASE.md
 
 # Frontend dependencies
 frontend/node_modules/

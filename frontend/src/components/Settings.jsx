@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useTheme, THEME_LIST, FONTS, FONT_SIZES } from '../contexts/ThemeContext';
+import PrivacySettings from './PrivacySettings';
 
 function Settings({ onConfigChange }) {
   const { theme, setTheme, font, setFont, fontSize, setFontSize } = useTheme();
@@ -263,6 +264,10 @@ function Settings({ onConfigChange }) {
         )}
       </div>
 
+      {/* Privacy Settings Section */}
+      <PrivacySettings />
+
+      {/* Provider Information Section */}
       <div className="settings-section">
         <h3>Provider Information</h3>
         <div className="provider-info">
@@ -284,6 +289,7 @@ function Settings({ onConfigChange }) {
         </div>
       </div>
 
+      {/* About Section */}
       <div className="settings-section">
         <h3>About SysMind</h3>
         {versionInfo && (

@@ -64,12 +64,12 @@ type glmResponse struct {
 	} `json:"error,omitempty"`
 }
 
-func (p *GLMProvider) GenerateResponse(ctx context.Context, prompt string, systemData models.SystemContext) (string, error) {
+func (p *GLMProvider) GenerateResponse(ctx context.Context, prompt string, systemData models.SystemContext, privacyConfig models.PrivacyConfig) (string, error) {
 	if !p.Available() {
 		return "", fmt.Errorf("Z.AI (GLM) API key not configured")
 	}
 
-	fullPrompt := BuildPrompt(prompt, systemData)
+	fullPrompt := BuildPrompt(prompt, systemData, privacyConfig)
 
 	reqBody := glmRequest{
 		Model: p.model,

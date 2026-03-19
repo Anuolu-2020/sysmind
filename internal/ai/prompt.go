@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"sort"
+	"strings"
 
 	"sysmind/internal/models"
 )
@@ -31,10 +32,10 @@ When responding:
 
 Remember: Most network activity is normal. Only flag actual security issues, not routine internet usage.`
 
-// BuildPrompt constructs the full prompt with system context
-func BuildPrompt(userQuery string, sysCtx models.SystemContext) string {
-	// Summarize system data for the prompt
-	summary := summarizeSystemData(sysCtx)
+// BuildPrompt constructs the full prompt with system context, respecting privacy settings
+func BuildPrompt(userQuery string, sysCtx models.SystemContext, privacy models.PrivacyConfig) string {
+	// Summarize system data for the prompt with privacy controls
+	summary := summarizeSystemDataWithPrivacy(sysCtx, privacy)
 
 	prompt := fmt.Sprintf(`Current System State:
 %s
@@ -53,15 +54,20 @@ Context notes:
 	return prompt
 }
 
-func summarizeSystemData(ctx models.SystemContext) string {
+// summarizeSystemDataWithPrivacy creates a summary respecting privacy settings
+func summarizeSystemDataWithPrivacy(ctx models.SystemContext, privacy models.PrivacyConfig) string {
 	var summary string
 
-	// CPU, Memory, and Disk summary
-	summary += fmt.Sprintf("System Overview:\n- CPU Usage: %.1f%%\n- Memory Usage: %.1f%%\n- Disk Usage: %.1f%% (%v / %v GB)\n\n",
-		ctx.CPUUsage, ctx.MemUsage, ctx.DiskUsage, ctx.DiskUsedGB, ctx.DiskTotalGB)
+	// CPU, Memory, and Disk summary (basic stats)
+	if privacy.ShareSystemStats {
+		summary += fmt.Sprintf("System Overview:\n- CPU Usage: %.1f%%\n- Memory Usage: %.1f%%\n- Disk Usage: %.1f%% (%v / %v GB)\n\n",
+			ctx.CPUUsage, ctx.MemUsage, ctx.DiskUsage, ctx.DiskUsedGB, ctx.DiskTotalGB)
+	} else {
+		summary += "System Overview: [Privacy Protected]\n\n"
+	}
 
 	// Top processes by CPU
-	if len(ctx.Processes) > 0 {
+	if len(ctx.Processes) > 0 && (privacy.ShareProcessNames || privacy.ShareProcessDetails) {
 		procs := make([]models.ProcessInfo, len(ctx.Processes))
 		copy(procs, ctx.Processes)
 		sort.Slice(procs, func(i, j int) bool {
@@ -75,14 +81,26 @@ func summarizeSystemData(ctx models.SystemContext) string {
 		}
 		for i := 0; i < count; i++ {
 			p := procs[i]
-			summary += fmt.Sprintf("- %s (PID %d): CPU %.1f%%, Memory %.1f MB\n",
-				p.Name, p.PID, p.CPUPercent, p.MemoryMB)
+			procName := p.Name
+			if privacy.AnonymizeProcesses {
+				procName = categorizeProcess(p.Name)
+			}
+
+			if privacy.ShareProcessNames && privacy.ShareProcessDetails {
+				summary += fmt.Sprintf("- %s (PID %d): CPU %.1f%%, Memory %.1f MB\n",
+					procName, p.PID, p.CPUPercent, p.MemoryMB)
+			} else if privacy.ShareProcessNames {
+				summary += fmt.Sprintf("- %s\n", procName)
+			} else if privacy.ShareProcessDetails {
+				summary += fmt.Sprintf("- [Process]: CPU %.1f%%, Memory %.1f MB\n",
+					p.CPUPercent, p.MemoryMB)
+			}
 		}
 		summary += "\n"
 	}
 
 	// Open ports summary
-	if len(ctx.Ports) > 0 {
+	if len(ctx.Ports) > 0 && privacy.ShareNetworkPorts {
 		summary += "Open Ports:\n"
 		listeningPorts := 0
 		establishedConns := 0
@@ -100,7 +118,11 @@ func summarizeSystemData(ctx models.SystemContext) string {
 		count := 0
 		for _, p := range ctx.Ports {
 			if p.State == "LISTENING" && count < 10 {
-				summary += fmt.Sprintf("- Port %d (%s): %s\n", p.Port, p.Protocol, p.ProcessName)
+				procName := p.ProcessName
+				if privacy.AnonymizeProcesses {
+					procName = categorizeProcess(p.ProcessName)
+				}
+				summary += fmt.Sprintf("- Port %d (%s): %s\n", p.Port, p.Protocol, procName)
 				count++
 			}
 		}
@@ -108,13 +130,17 @@ func summarizeSystemData(ctx models.SystemContext) string {
 	}
 
 	// Security information including geo-located connections
-	if ctx.SecurityInfo != nil {
+	if ctx.SecurityInfo != nil && privacy.ShareSecurityInfo {
 		summary += "Security Information:\n"
 		summary += fmt.Sprintf("- Firewall Status: %s\n", ctx.SecurityInfo.FirewallStatus)
 
 		if len(ctx.SecurityInfo.SuspiciousProcs) > 0 {
 			summary += fmt.Sprintf("- Suspicious Processes Detected: %d\n", len(ctx.SecurityInfo.SuspiciousProcs))
 			for _, proc := range ctx.SecurityInfo.SuspiciousProcs {
+				procName := proc.Name
+				if privacy.AnonymizeProcesses {
+					procName = categorizeProcess(proc.Name)
+				}
 				reasons := ""
 				if len(proc.Reasons) > 0 {
 					reasons = proc.Reasons[0] // Show first reason
@@ -122,44 +148,58 @@ func summarizeSystemData(ctx models.SystemContext) string {
 						reasons += fmt.Sprintf(" (and %d more)", len(proc.Reasons)-1)
 					}
 				}
-				summary += fmt.Sprintf("  * %s: %s\n", proc.Name, reasons)
+				summary += fmt.Sprintf("  * %s: %s\n", procName, reasons)
 			}
 		}
 
-		if len(ctx.SecurityInfo.UnknownConns) > 0 {
+		if len(ctx.SecurityInfo.UnknownConns) > 0 && (privacy.ShareConnectionIPs || privacy.ShareConnectionGeo) {
 			summary += fmt.Sprintf("- External Network Connections: %d (normal internet activity)\n", len(ctx.SecurityInfo.UnknownConns))
 
-			// Group connections by country
-			countryMap := make(map[string]int)
-			for _, conn := range ctx.SecurityInfo.UnknownConns {
-				if conn.Country != "" {
-					countryMap[conn.Country]++
+			// Group connections by country if geo sharing is enabled
+			if privacy.ShareConnectionGeo {
+				countryMap := make(map[string]int)
+				for _, conn := range ctx.SecurityInfo.UnknownConns {
+					if conn.Country != "" {
+						countryMap[conn.Country]++
+					}
 				}
-			}
 
-			if len(countryMap) > 0 {
-				summary += "  Geographic Distribution:\n"
-				for country, count := range countryMap {
-					summary += fmt.Sprintf("    - %s: %d connection(s)\n", country, count)
+				if len(countryMap) > 0 {
+					summary += "  Geographic Distribution:\n"
+					for country, count := range countryMap {
+						summary += fmt.Sprintf("    - %s: %d connection(s)\n", country, count)
+					}
 				}
 			}
 
 			// Show some specific connections with process context
-			summary += "  Active Connections (by process):\n"
-			count := 0
-			for _, conn := range ctx.SecurityInfo.UnknownConns {
-				if count < 6 {
-					locationInfo := ""
-					if conn.Country != "" {
-						locationInfo = fmt.Sprintf(" [%s", conn.Country)
-						if conn.City != "" {
-							locationInfo += fmt.Sprintf(", %s", conn.City)
+			if privacy.ShareConnectionIPs {
+				summary += "  Active Connections (by process):\n"
+				count := 0
+				for _, conn := range ctx.SecurityInfo.UnknownConns {
+					if count < 6 {
+						procName := conn.ProcessName
+						if privacy.AnonymizeProcesses {
+							procName = categorizeProcess(conn.ProcessName)
 						}
-						locationInfo += "]"
+
+						remoteAddr := conn.RemoteAddr
+						if privacy.AnonymizeConnections {
+							remoteAddr = categorizeIP(conn.RemoteAddr)
+						}
+
+						locationInfo := ""
+						if privacy.ShareConnectionGeo && conn.Country != "" {
+							locationInfo = fmt.Sprintf(" [%s", conn.Country)
+							if conn.City != "" {
+								locationInfo += fmt.Sprintf(", %s", conn.City)
+							}
+							locationInfo += "]"
+						}
+						summary += fmt.Sprintf("    - %s -> %s%s (%s)\n",
+							conn.LocalAddr, remoteAddr, locationInfo, procName)
+						count++
 					}
-					summary += fmt.Sprintf("    - %s -> %s%s (%s)\n",
-						conn.LocalAddr, conn.RemoteAddr, locationInfo, conn.ProcessName)
-					count++
 				}
 			}
 		}
@@ -167,7 +207,7 @@ func summarizeSystemData(ctx models.SystemContext) string {
 	}
 
 	// Network usage summary
-	if len(ctx.Network) > 0 {
+	if len(ctx.Network) > 0 && privacy.ShareProcessDetails {
 		netUsage := make([]models.NetworkUsage, len(ctx.Network))
 		copy(netUsage, ctx.Network)
 		sort.Slice(netUsage, func(i, j int) bool {
@@ -182,12 +222,105 @@ func summarizeSystemData(ctx models.SystemContext) string {
 		}
 		for i := 0; i < count; i++ {
 			n := netUsage[i]
+			procName := n.ProcessName
+			if privacy.AnonymizeProcesses {
+				procName = categorizeProcess(n.ProcessName)
+			}
 			summary += fmt.Sprintf("- %s: Download %.1f KB/s, Upload %.1f KB/s\n",
-				n.ProcessName, n.DownloadSpeed/1024, n.UploadSpeed/1024)
+				procName, n.DownloadSpeed/1024, n.UploadSpeed/1024)
 		}
 	}
 
 	return summary
+}
+
+// categorizeProcess replaces specific process names with categories
+func categorizeProcess(name string) string {
+	nameLower := strings.ToLower(name)
+
+	// Browsers
+	browsers := []string{"firefox", "chrome", "chromium", "safari", "edge", "opera", "brave", "vivaldi"}
+	for _, b := range browsers {
+		if strings.Contains(nameLower, b) {
+			return "[Browser]"
+		}
+	}
+
+	// Development tools
+	devTools := []string{"code", "vscode", "vim", "nvim", "emacs", "idea", "pycharm", "webstorm", "node", "npm", "yarn", "go", "python", "java", "rust", "cargo"}
+	for _, d := range devTools {
+		if strings.Contains(nameLower, d) {
+			return "[Dev Tool]"
+		}
+	}
+
+	// Communication
+	commApps := []string{"slack", "teams", "discord", "zoom", "skype", "telegram", "signal", "whatsapp"}
+	for _, c := range commApps {
+		if strings.Contains(nameLower, c) {
+			return "[Communication]"
+		}
+	}
+
+	// Media
+	mediaApps := []string{"spotify", "vlc", "mpv", "music", "video", "player"}
+	for _, m := range mediaApps {
+		if strings.Contains(nameLower, m) {
+			return "[Media]"
+		}
+	}
+
+	// System processes
+	sysProcs := []string{"systemd", "kernel", "init", "dbus", "udev", "journald", "networkmanager", "pulseaudio", "pipewire"}
+	for _, s := range sysProcs {
+		if strings.Contains(nameLower, s) {
+			return "[System]"
+		}
+	}
+
+	// Database
+	dbProcs := []string{"postgres", "mysql", "mongo", "redis", "sqlite"}
+	for _, db := range dbProcs {
+		if strings.Contains(nameLower, db) {
+			return "[Database]"
+		}
+	}
+
+	return "[Application]"
+}
+
+// categorizeIP replaces specific IP addresses with provider categories
+func categorizeIP(ip string) string {
+	// Extract just the IP without port
+	ipOnly := ip
+	if idx := strings.LastIndex(ip, ":"); idx != -1 {
+		ipOnly = ip[:idx]
+	}
+
+	// Common CDN/Cloud ranges (simplified - in production you'd use proper IP range lookups)
+	if strings.HasPrefix(ipOnly, "142.250.") || strings.HasPrefix(ipOnly, "172.217.") {
+		return "[Google Services]"
+	}
+	if strings.HasPrefix(ipOnly, "52.") || strings.HasPrefix(ipOnly, "54.") || strings.HasPrefix(ipOnly, "3.") {
+		return "[AWS Cloud]"
+	}
+	if strings.HasPrefix(ipOnly, "13.") || strings.HasPrefix(ipOnly, "20.") || strings.HasPrefix(ipOnly, "40.") {
+		return "[Microsoft/Azure]"
+	}
+	if strings.HasPrefix(ipOnly, "104.") || strings.HasPrefix(ipOnly, "172.64.") || strings.HasPrefix(ipOnly, "1.1.") {
+		return "[Cloudflare CDN]"
+	}
+	if strings.HasPrefix(ipOnly, "151.101.") || strings.HasPrefix(ipOnly, "199.232.") {
+		return "[Fastly CDN]"
+	}
+	if strings.HasPrefix(ipOnly, "185.199.") {
+		return "[GitHub]"
+	}
+	if strings.HasPrefix(ipOnly, "157.240.") || strings.HasPrefix(ipOnly, "31.13.") {
+		return "[Meta/Facebook]"
+	}
+
+	return "[External Server]"
 }
 
 // GetSystemPrompt returns the system prompt for the AI

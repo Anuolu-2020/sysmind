@@ -9,7 +9,7 @@ import (
 // Provider defines the interface for AI providers
 type Provider interface {
 	// GenerateResponse generates a response based on the prompt and system context
-	GenerateResponse(ctx context.Context, prompt string, systemData models.SystemContext) (string, error)
+	GenerateResponse(ctx context.Context, prompt string, systemData models.SystemContext, privacyConfig models.PrivacyConfig) (string, error)
 	// Name returns the provider name
 	Name() string
 	// Available checks if the provider is configured and available

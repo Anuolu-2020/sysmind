@@ -76,8 +76,8 @@ type ollamaResponse struct {
 	Error string `json:"error,omitempty"`
 }
 
-func (p *LocalProvider) GenerateResponse(ctx context.Context, prompt string, systemData models.SystemContext) (string, error) {
-	fullPrompt := BuildPrompt(prompt, systemData)
+func (p *LocalProvider) GenerateResponse(ctx context.Context, prompt string, systemData models.SystemContext, privacyConfig models.PrivacyConfig) (string, error) {
+	fullPrompt := BuildPrompt(prompt, systemData, privacyConfig)
 
 	reqBody := ollamaRequest{
 		Model: p.model,
