@@ -4,7 +4,6 @@ package collectors
 
 import (
 	"fmt"
-	"os/exec"
 	"strconv"
 	"strings"
 	"sync"
@@ -18,6 +17,7 @@ import (
 	gnet "github.com/shirou/gopsutil/v3/net"
 	"github.com/shirou/gopsutil/v3/process"
 
+	"sysmind/internal/exec"
 	"sysmind/internal/models"
 	"sysmind/internal/services"
 )
