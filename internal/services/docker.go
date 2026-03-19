@@ -3,12 +3,12 @@ package services
 import (
 	"encoding/json"
 	"fmt"
-	"os/exec"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
 
+	"sysmind/internal/exec"
 	"sysmind/internal/models"
 )
 

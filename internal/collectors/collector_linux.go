@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"net"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -24,6 +23,7 @@ import (
 	gnet "github.com/shirou/gopsutil/v3/net"
 	"github.com/shirou/gopsutil/v3/process"
 
+	"sysmind/internal/exec"
 	"sysmind/internal/models"
 	"sysmind/internal/services"
 )
