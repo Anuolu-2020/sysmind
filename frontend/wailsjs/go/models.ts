@@ -569,6 +569,9 @@ export namespace models {
 	    timestamp: any;
 	    cpuUsage: number;
 	    memUsage: number;
+	    diskUsage: number;
+	    diskUsedGB: number;
+	    diskTotalGB: number;
 	    securityInfo?: SecurityInfo;
 	
 	    static createFrom(source: any = {}) {
@@ -583,6 +586,9 @@ export namespace models {
 	        this.timestamp = this.convertValues(source["timestamp"], null);
 	        this.cpuUsage = source["cpuUsage"];
 	        this.memUsage = source["memUsage"];
+	        this.diskUsage = source["diskUsage"];
+	        this.diskUsedGB = source["diskUsedGB"];
+	        this.diskTotalGB = source["diskTotalGB"];
 	        this.securityInfo = this.convertValues(source["securityInfo"], SecurityInfo);
 	    }
 	
@@ -693,6 +699,58 @@ export namespace services {
 	        this.requiresApiKey = source["requiresApiKey"];
 	        this.requiresAcctId = source["requiresAcctId"];
 	        this.requiresEndpoint = source["requiresEndpoint"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+
+}
+
+export namespace version {
+	
+	export class Info {
+	    version: string;
+	    gitCommit: string;
+	    gitTag: string;
+	    buildDate: string;
+	    buildUser: string;
+	    goVersion: string;
+	    platform: string;
+	    arch: string;
+	    // Go type: time
+	    timestamp: any;
+	
+	    static createFrom(source: any = {}) {
+	        return new Info(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.version = source["version"];
+	        this.gitCommit = source["gitCommit"];
+	        this.gitTag = source["gitTag"];
+	        this.buildDate = source["buildDate"];
+	        this.buildUser = source["buildUser"];
+	        this.goVersion = source["goVersion"];
+	        this.platform = source["platform"];
+	        this.arch = source["arch"];
+	        this.timestamp = this.convertValues(source["timestamp"], null);
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {
