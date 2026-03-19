@@ -39,8 +39,8 @@ jobs:
             body: 'Release ${{ steps.get_tag.outputs.tag_name }}',
             draft: false,
             prerelease: false,
-          });
-          return data.id
+           });
+           return data.id;
 
   build:
     needs: create-release
@@ -92,22 +92,22 @@ jobs:
         
     - name: Install Wails CLI
       run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
-      
+       
     - name: Install frontend dependencies
       run: |
         cd frontend
         npm ci
         
-     - name: Install Go dependencies
-       run: go mod download
-       
-     - name: Install Linux dependencies
-       if: matrix.os == 'ubuntu-latest'
-       run: |
-         sudo apt-get update
-         sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev
-       
-     - name: Install UPX (Linux/macOS)
+    - name: Install Go dependencies
+      run: go mod download
+      
+    - name: Install Linux dependencies
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev
+      
+    - name: Install UPX (Linux/macOS)
       if: matrix.os != 'windows-latest'
       run: |
         if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
