@@ -11,9 +11,11 @@ import (
 
 // ConfigService manages application configuration
 type ConfigService struct {
-	configPath string
-	config     models.AIConfig
-	mu         sync.RWMutex
+	configPath        string
+	privacyConfigPath string
+	config            models.AIConfig
+	privacyConfig     models.PrivacyConfig
+	mu                sync.RWMutex
 }
 
 // NewConfigService creates a new config service
@@ -29,14 +31,18 @@ func NewConfigService() (*ConfigService, error) {
 	}
 
 	configPath := filepath.Join(appConfigDir, "config.json")
+	privacyConfigPath := filepath.Join(appConfigDir, "privacy.json")
 
 	cs := &ConfigService{
-		configPath: configPath,
-		config:     getDefaultConfig(),
+		configPath:        configPath,
+		privacyConfigPath: privacyConfigPath,
+		config:            getDefaultConfig(),
+		privacyConfig:     getDefaultPrivacyConfig(),
 	}
 
-	// Load existing config if it exists
+	// Load existing configs if they exist
 	cs.loadConfig()
+	cs.loadPrivacyConfig()
 
 	return cs, nil
 }
@@ -46,6 +52,20 @@ func getDefaultConfig() models.AIConfig {
 		Provider:      "openai",
 		Model:         "gpt-4o-mini",
 		LocalEndpoint: "http://localhost:11434",
+	}
+}
+
+func getDefaultPrivacyConfig() models.PrivacyConfig {
+	return models.PrivacyConfig{
+		ShareProcessNames:    true,
+		ShareProcessDetails:  true,
+		ShareNetworkPorts:    true,
+		ShareConnectionIPs:   true,
+		ShareConnectionGeo:   true,
+		ShareSecurityInfo:    true,
+		ShareSystemStats:     true,
+		AnonymizeProcesses:   false,
+		AnonymizeConnections: false,
 	}
 }
 
@@ -61,6 +81,20 @@ func (cs *ConfigService) loadConfig() {
 	}
 
 	cs.config = config
+}
+
+func (cs *ConfigService) loadPrivacyConfig() {
+	data, err := os.ReadFile(cs.privacyConfigPath)
+	if err != nil {
+		return
+	}
+
+	var config models.PrivacyConfig
+	if err := json.Unmarshal(data, &config); err != nil {
+		return
+	}
+
+	cs.privacyConfig = config
 }
 
 // GetConfig returns the current configuration
@@ -83,6 +117,28 @@ func (cs *ConfigService) SetConfig(config models.AIConfig) error {
 	}
 
 	return os.WriteFile(cs.configPath, data, 0600)
+}
+
+// GetPrivacyConfig returns the current privacy configuration
+func (cs *ConfigService) GetPrivacyConfig() models.PrivacyConfig {
+	cs.mu.RLock()
+	defer cs.mu.RUnlock()
+	return cs.privacyConfig
+}
+
+// SetPrivacyConfig updates and saves the privacy configuration
+func (cs *ConfigService) SetPrivacyConfig(config models.PrivacyConfig) error {
+	cs.mu.Lock()
+	defer cs.mu.Unlock()
+
+	cs.privacyConfig = config
+
+	data, err := json.MarshalIndent(config, "", "  ")
+	if err != nil {
+		return err
+	}
+
+	return os.WriteFile(cs.privacyConfigPath, data, 0600)
 }
 
 // GetAvailableProviders returns list of available AI providers
