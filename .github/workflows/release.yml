@@ -120,7 +120,9 @@ jobs:
       if: matrix.os == 'windows-latest'
       run: |
         # Install Visual Studio Build Tools components if needed
-        choco install visualstudio2022-workload-nativedesktop -y --allow-downgrade 2>/dev/null || true
+        # Use shell: bash for consistent syntax or remove unix-style redirections
+        choco install visualstudio2022-workload-nativedesktop -y --allow-downgrade || true
+      shell: bash
         
     - name: Prepare build icons
       run: |
