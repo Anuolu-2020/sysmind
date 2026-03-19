@@ -2,7 +2,12 @@
 
 <div align="center">
 
-![SysMind Logo](https://via.placeholder.com/200x80/7aa2f7/ffffff?text=SysMind)
+```
+╔═══════════════════════════════════════╗
+║     🧠 SysMind                       ║
+║  AI-Powered System Monitoring        ║
+╚═══════════════════════════════════════╝
+```
 
 **AI-powered system monitoring assistant that helps you understand what your computer is doing in real-time.**
 
@@ -11,11 +16,11 @@
 [![Wails](https://img.shields.io/badge/built%20with-Wails-red)](https://wails.io/)
 [![React](https://img.shields.io/badge/frontend-React-blue)](https://reactjs.org/)
 
-[Features](#features) •
-[Installation](#installation) •
-[Usage](#usage) •
-[Contributing](#contributing) •
-[License](#license)
+[Features](#-features) •
+[Installation](#-installation) •
+[Usage](#-usage) •
+[Contributing](#-contributing) •
+[License](#-license)
 
 </div>
 
@@ -513,6 +518,7 @@ make setup
 # Start development
 make dev
 ```
+
 ### Areas for Contribution
 - 🐛 Bug fixes and performance improvements
 - ✨ New features and AI integrations
