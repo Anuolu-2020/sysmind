@@ -168,6 +168,7 @@ jobs:
                  -X 'sysmind/internal/version.BuildUser=${BUILD_USER}'"
         
         wails build -clean -platform ${{ matrix.platform }} $UPX_FLAG -s -ldflags "$LDFLAGS"
+      shell: bash
         
     - name: Get binary name
       id: binary_name
