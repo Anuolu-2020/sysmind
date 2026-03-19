@@ -27,6 +27,8 @@ func NewProvider(config models.AIConfig) Provider {
 		return NewKimiProvider(config.APIKey, config.Model)
 	case "glm":
 		return NewGLMProvider(config.APIKey, config.Model)
+	case "gemini":
+		return NewGeminiProvider(config.APIKey, config.Model)
 	case "copilot":
 		return NewCopilotProvider(config.APIKey, config.Model)
 	case "cloudflare":

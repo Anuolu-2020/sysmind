@@ -12,6 +12,7 @@ const systemPrompt = `You are SysMind, an AI-powered system monitoring assistant
 
 You analyze system data including:
 - Running processes (CPU usage, memory usage)
+- Disk usage and storage capacity
 - Open network ports and connections
 - Network bandwidth usage per process
 - Security information including firewall status
@@ -55,8 +56,9 @@ Context notes:
 func summarizeSystemData(ctx models.SystemContext) string {
 	var summary string
 
-	// CPU and Memory summary
-	summary += fmt.Sprintf("System Overview:\n- CPU Usage: %.1f%%\n- Memory Usage: %.1f%%\n\n", ctx.CPUUsage, ctx.MemUsage)
+	// CPU, Memory, and Disk summary
+	summary += fmt.Sprintf("System Overview:\n- CPU Usage: %.1f%%\n- Memory Usage: %.1f%%\n- Disk Usage: %.1f%% (%v / %v GB)\n\n",
+		ctx.CPUUsage, ctx.MemUsage, ctx.DiskUsage, ctx.DiskUsedGB, ctx.DiskTotalGB)
 
 	// Top processes by CPU
 	if len(ctx.Processes) > 0 {

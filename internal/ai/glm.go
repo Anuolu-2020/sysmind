@@ -12,17 +12,17 @@ import (
 	"sysmind/internal/models"
 )
 
-// GLMProvider implements the Provider interface for Zhipu AI (GLM)
+// GLMProvider implements the Provider interface for Z.AI (Zhipu AI)
 type GLMProvider struct {
 	apiKey string
 	model  string
 	client *http.Client
 }
 
-// NewGLMProvider creates a new GLM/Zhipu provider
+// NewGLMProvider creates a new Z.AI/GLM provider
 func NewGLMProvider(apiKey, model string) *GLMProvider {
 	if model == "" {
-		model = "glm-4-flash"
+		model = "glm-5"
 	}
 	return &GLMProvider{
 		apiKey: apiKey,
@@ -39,7 +39,7 @@ func (p *GLMProvider) Available() bool {
 	return p.apiKey != ""
 }
 
-// GLM uses OpenAI-compatible API format
+// Z.AI uses standard OpenAI-compatible API format
 type glmRequest struct {
 	Model       string       `json:"model"`
 	Messages    []glmMessage `json:"messages"`
@@ -66,7 +66,7 @@ type glmResponse struct {
 
 func (p *GLMProvider) GenerateResponse(ctx context.Context, prompt string, systemData models.SystemContext) (string, error) {
 	if !p.Available() {
-		return "", fmt.Errorf("Zhipu (GLM) API key not configured")
+		return "", fmt.Errorf("Z.AI (GLM) API key not configured")
 	}
 
 	fullPrompt := BuildPrompt(prompt, systemData)
@@ -86,7 +86,7 @@ func (p *GLMProvider) GenerateResponse(ctx context.Context, prompt string, syste
 		return "", fmt.Errorf("failed to marshal request: %w", err)
 	}
 
-	req, err := http.NewRequestWithContext(ctx, "POST", "https://open.bigmodel.cn/api/paas/v4/chat/completions", bytes.NewBuffer(jsonBody))
+	req, err := http.NewRequestWithContext(ctx, "POST", "https://api.z.ai/api/paas/v4/chat/completions", bytes.NewBuffer(jsonBody))
 	if err != nil {
 		return "", fmt.Errorf("failed to create request: %w", err)
 	}
@@ -111,7 +111,7 @@ func (p *GLMProvider) GenerateResponse(ctx context.Context, prompt string, syste
 	}
 
 	if result.Error != nil {
-		return "", fmt.Errorf("API error: %s", result.Error.Message)
+		return "", fmt.Errorf("API error: %s (code: %s)", result.Error.Message, result.Error.Code)
 	}
 
 	if len(result.Choices) == 0 {
