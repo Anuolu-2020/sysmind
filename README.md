@@ -28,8 +28,10 @@ SysMind is a cross-platform desktop application built with Go and Wails that pro
 ### 🖥️ **System Dashboard**
 - **Process Monitoring**: View all running processes with CPU and memory usage
 - **Network Analysis**: Monitor open ports (TCP/UDP) with associated processes  
-- **Resource Timeline**: Real-time charts showing CPU, memory, disk, and network usage
+- **Resource Timeline**: Real-time charts showing CPU, memory, disk, and network usage with customizable time windows (15m, 30m, 60m)
+- **Disk Monitoring**: Real-time disk usage percentage, used/total capacity, and disk I/O speeds
 - **Bandwidth Tracking**: Network usage per application with upload/download speeds
+- **System Stats Cards**: Real-time CPU, RAM, and network metrics with mini-trend graphs
 - **Auto-refresh**: Live updates every 3-5 seconds
 
 ### 🤖 **AI-Powered Insights**
@@ -37,6 +39,9 @@ SysMind is a cross-platform desktop application built with Go and Wails that pro
 - **Smart Analysis**: Get explanations about system activity and performance
 - **Security Assessment**: Identify potential issues or suspicious behavior
 - **Performance Optimization**: Recommendations for system improvements
+- **Quick Chat (Ctrl+K)**: Floating AI assistant panel for quick queries without leaving current tab
+- **Chat Sessions**: Create, manage, and switch between multiple conversation sessions
+- **Disk Monitoring**: AI has access to disk usage and storage capacity information
 
 ### 🔌 **AI Provider Support**
 - **OpenAI**: GPT-4, GPT-4 Turbo, GPT-3.5 Turbo
@@ -133,6 +138,19 @@ make build
 
 ## 💡 Usage
 
+### Quick Chat (Ctrl+K)
+Press **Ctrl+K** anywhere in the application (except in the Chat tab) to open the floating Quick Chat panel:
+- Ask AI questions without leaving your current tab
+- View and switch between existing chat sessions using the hamburger menu (☰)
+- Create new sessions automatically when sending your first message
+- Close with the ✕ button or by pressing Escape
+
+### Chat Session Management
+- Create new chat sessions in the Chat tab or through Quick Chat
+- Switch between sessions to continue previous conversations
+- Each session maintains its own conversation history
+- Sessions persist across application restarts
+
 ### Example Queries
 - *"Why is my computer running slow?"*
 - *"What processes are using the most CPU?"*
@@ -140,13 +158,27 @@ make build
 - *"What's using my internet connection?"*
 - *"Show me all listening network ports"*
 - *"Explain what this process does"*
+- *"How much disk space do I have left?"*
 - *"How can I optimize my system performance?"*
 
 ### Dashboard Navigation
-- **Processes Tab**: View and sort running processes
-- **Ports Tab**: Monitor network connections  
-- **Timeline Tab**: Historical resource usage charts
-- **Chat Tab**: AI assistant for system queries
+- **Dashboard Tab (Ctrl+1)**: System overview with processes, ports, and resource timeline
+- **AI Chat Tab (Ctrl+2)**: Full-featured chat interface with session management
+- **Security Tab (Ctrl+3)**: Firewall status and suspicious process detection
+- **Auto Insights Tab (Ctrl+4)**: AI-generated system analysis and recommendations
+- **Alerts Tab (Ctrl+5)**: System alerts and notifications
+- **Settings Tab (Ctrl+6)**: AI provider configuration and preferences
+
+### Keyboard Shortcuts
+- **Ctrl+1**: Dashboard
+- **Ctrl+2**: AI Chat
+- **Ctrl+3**: Security
+- **Ctrl+4**: Auto Insights
+- **Ctrl+5**: Alerts
+- **Ctrl+6**: Settings
+- **Ctrl+K**: Quick Chat (floating panel)
+- **Shift+?**: Show keyboard shortcuts
+- **Esc**: Close modals and floating panels
 
 ## 🏗️ Project Structure
 
