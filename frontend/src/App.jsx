@@ -1,7 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { ErrorDialogProvider } from './contexts/ErrorDialogContext';
+import { ChatProvider } from './contexts/ChatContext';
 import Dashboard from './components/Dashboard';
 import Chat from './components/Chat';
+import QuickChatDialog from './components/QuickChatDialog';
 import Settings from './components/Settings';
 import Security from './components/Security';
 import Alerts from './components/Alerts';
@@ -9,11 +12,11 @@ import AutoInsights from './components/AutoInsights';
 
 function AppContent() {
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [systemStats, setSystemStats] = useState({ cpu: 0, memory: 0 });
-  const [quickStats, setQuickStats] = useState({ cpu: 0, memory: 0, disk: 0, alerts: 0 });
-  const [isConfigured, setIsConfigured] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
   const [versionInfo, setVersionInfo] = useState(null);
+  const [showQuickChat, setShowQuickChat] = useState(false);
+  const [isConfigured, setIsConfigured] = useState(false);
+  const [alertCount, setAlertCount] = useState(0);
 
   const playAlertBeep = useCallback((severity) => {
     try {
@@ -78,13 +81,9 @@ function AppContent() {
 
   const fetchStats = useCallback(async () => {
     try {
-      if (window.go?.main?.App?.GetSystemStats) {
-        const stats = await window.go.main.App.GetSystemStats();
-        setSystemStats(stats);
-      }
       if (window.go?.main?.App?.GetQuickStats) {
         const quick = await window.go.main.App.GetQuickStats();
-        setQuickStats(quick);
+        setAlertCount(quick?.alerts || 0);
       }
     } catch (err) {
       console.error('Error fetching stats:', err);
@@ -100,6 +99,12 @@ function AppContent() {
       if (e.key === '?' && e.shiftKey) {
         e.preventDefault();
         setShowShortcuts(s => !s);
+      } else if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        // Only allow Ctrl+K when NOT in Chat section
+        if (activeTab !== 'chat') {
+          setShowQuickChat(s => !s);
+        }
       } else if (e.key === '1' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         setActiveTab('dashboard');
@@ -120,12 +125,13 @@ function AppContent() {
         setActiveTab('settings');
       } else if (e.key === 'Escape') {
         setShowShortcuts(false);
+        setShowQuickChat(false);
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [activeTab]);
 
   useEffect(() => {
     checkConfig();
@@ -174,47 +180,40 @@ function AppContent() {
 
   return (
     <div className="app">
-      <header className="header">
-        <h1>SysMind</h1>
-        <div className="header-stats">
-          <div className="stat-item">
-            <span className="stat-label">CPU:</span>
-            <span className={`stat-value ${systemStats.cpu > 80 ? 'text-danger' : ''}`}>
-              {systemStats.cpu?.toFixed(1)}%
-            </span>
-          </div>
-          <div className="stat-item">
-            <span className="stat-label">Memory:</span>
-            <span className={`stat-value ${systemStats.memory > 85 ? 'text-danger' : ''}`}>
-              {systemStats.memory?.toFixed(1)}%
-            </span>
-          </div>
-          <div className="stat-item">
-            <span className="stat-label">Disk:</span>
-            <span className={`stat-value ${quickStats.disk > 90 ? 'text-danger' : quickStats.disk > 75 ? 'text-warning' : ''}`}>
-              {quickStats.disk?.toFixed(1)}%
-            </span>
-          </div>
-          {quickStats.alerts > 0 && (
-            <div className="stat-item alert-indicator" onClick={() => setActiveTab('alerts')} title="View Alerts">
-              <span className="alert-badge">{quickStats.alerts}</span>
-              <span className="stat-label">Alert{quickStats.alerts > 1 ? 's' : ''}</span>
-            </div>
-          )}
-          <div className="stat-item">
-            <span className={`badge ${isConfigured ? 'badge-listening' : 'badge-other'}`}>
-              {isConfigured ? 'AI Ready' : 'AI Not Configured'}
-            </span>
-          </div>
-          <button 
-            className="shortcuts-btn" 
-            onClick={() => setShowShortcuts(true)}
-            title="Keyboard Shortcuts (?)"
-          >
-            ?
-          </button>
-        </div>
-      </header>
+       <header className="header">
+         <h1>SysMind</h1>
+         <div className="header-stats">
+           {alertCount > 0 && (
+             <div className="stat-item alert-indicator" onClick={() => setActiveTab('alerts')} title="View Alerts">
+               <span className="alert-badge">{alertCount}</span>
+               <span className="stat-label">Alert{alertCount > 1 ? 's' : ''}</span>
+             </div>
+           )}
+           <div className="stat-item">
+             <span className={`badge ${isConfigured ? 'badge-listening' : 'badge-other'}`}>
+               {isConfigured ? 'AI Ready' : 'AI Not Configured'}
+             </span>
+           </div>
+           <button 
+             className="shortcuts-btn" 
+             onClick={() => setShowShortcuts(true)}
+             title="Keyboard Shortcuts (?)"
+           >
+             ?
+           </button>
+           <button 
+             className="close-btn" 
+             onClick={async () => {
+               if (window.go?.main?.App?.MinimizeToTray) {
+                 await window.go.main.App.MinimizeToTray();
+               }
+             }}
+             title="Minimize to tray (you can restore from system tray)"
+           >
+             ✕
+           </button>
+         </div>
+       </header>
 
       <nav className="nav">
         <button
@@ -287,6 +286,10 @@ function AppContent() {
               <span className="shortcut-key"><kbd>Ctrl</kbd><kbd>2</kbd></span>
             </div>
             <div className="shortcut-item">
+              <span>Quick Chat</span>
+              <span className="shortcut-key"><kbd>Ctrl</kbd><kbd>K</kbd></span>
+            </div>
+            <div className="shortcut-item">
               <span>Security</span>
               <span className="shortcut-key"><kbd>Ctrl</kbd><kbd>3</kbd></span>
             </div>
@@ -320,6 +323,9 @@ function AppContent() {
           </div>
         </>
       )}
+
+      {/* Quick Chat Dialog */}
+      <QuickChatDialog isOpen={showQuickChat} onClose={() => setShowQuickChat(false)} />
     </div>
   );
 }
@@ -327,7 +333,11 @@ function AppContent() {
 function App() {
   return (
     <ThemeProvider>
-      <AppContent />
+      <ErrorDialogProvider>
+        <ChatProvider>
+          <AppContent />
+        </ChatProvider>
+      </ErrorDialogProvider>
     </ThemeProvider>
   );
 }
