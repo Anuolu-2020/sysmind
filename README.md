@@ -160,7 +160,7 @@ System notifications and warnings:
 
 | | |
 |---|---|
-| ![Settings Tab Screenshot](docs/screenshots/settings.png) | ![Settings Tab Screenshot](docs/screenshots/settings2.png) |
+| ![Settings Tab Screenshot](docs/screenshots/settings.png) | |
 
 Configuration and preferences:
 - **AI Provider Selection**
@@ -175,6 +175,10 @@ Configuration and preferences:
   - Threshold settings for CPU, Memory, Disk
 
 ### Theme & Design
+
+| | |
+|---|---|
+| ![Theme & Design Screenshot](docs/screenshots/settings2.png) | |
 
 - **Dark Theme** (Primary): Dark blue/purple palette for reduced eye strain
 - **Color Coding**:
