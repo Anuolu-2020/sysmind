@@ -1,3 +1,8 @@
+## [0.1.3] - 2026-03-19
+
+### Changes
+- fix: update WebKit dependency for Ubuntu 24.04 compatibility (b374f89)
+
 ## [0.1.2] - 2026-03-19
 
 ### Changes
