@@ -116,9 +116,18 @@ jobs:
         
     - name: Prepare build icons
       run: |
-        mkdir -p build/icons
-        cp resources/icons/icon_512.png build/icons/icon_512.png 2>/dev/null || echo "512 icon not found"
-        cp resources/icons/icon.ico build/icons/icon.ico 2>/dev/null || echo "ICO icon not found"
+        # Create standard Wails build directory structure
+        mkdir -p build/windows build/darwin build/linux build/icons
+        
+        # Copy icons to all required locations
+        cp resources/icons/icon_512.png build/appicon.png 2>/dev/null || echo "appicon not found"
+        cp resources/icons/icon.ico build/windows/icon.ico 2>/dev/null || echo "Windows icon not found"
+        cp resources/icons/icon_512.png build/darwin/icon_512.png 2>/dev/null || echo "Darwin icon not found"
+        cp resources/icons/icon_512.png build/linux/icon_512.png 2>/dev/null || echo "Linux icon not found"
+        
+        # Also keep legacy locations for compatibility
+        cp resources/icons/icon_512.png build/icons/icon_512.png 2>/dev/null || true
+        cp resources/icons/icon.ico build/icons/icon.ico 2>/dev/null || true
       shell: bash
       
     - name: Install UPX (Linux/macOS)

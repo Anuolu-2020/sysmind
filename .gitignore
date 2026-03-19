@@ -21,12 +21,19 @@ go.work
 # Dependency directories (remove the comment below to include it)
 # vendor/
 
-# Wails build directory
-build/
+# Wails build directory - only ignore compiled output
+build/bin/
 app.syso
 wails.json.backup*
 sysmind.desktop
 RELEASE.md
+
+# Keep build assets (icons, manifests, etc) tracked
+!build/appicon.png
+!build/windows/
+!build/darwin/
+!build/linux/
+!build/icons/
 
 # Frontend dependencies
 frontend/node_modules/

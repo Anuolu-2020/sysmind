@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=SysMind
+Comment=AI-powered system monitoring desktop application
+Exec=sysmind
+Icon=sysmind
+Type=Application
+Categories=Utility;System;Monitor;
+Terminal=false
+StartupWMClass=sysmind
