@@ -62,12 +62,12 @@ type anthropicResponse struct {
 	} `json:"error,omitempty"`
 }
 
-func (p *AnthropicProvider) GenerateResponse(ctx context.Context, prompt string, systemData models.SystemContext) (string, error) {
+func (p *AnthropicProvider) GenerateResponse(ctx context.Context, prompt string, systemData models.SystemContext, privacyConfig models.PrivacyConfig) (string, error) {
 	if !p.Available() {
 		return "", fmt.Errorf("Anthropic API key not configured")
 	}
 
-	fullPrompt := BuildPrompt(prompt, systemData)
+	fullPrompt := BuildPrompt(prompt, systemData, privacyConfig)
 
 	reqBody := anthropicRequest{
 		Model:     p.model,

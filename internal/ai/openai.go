@@ -61,12 +61,12 @@ type openAIResponse struct {
 	} `json:"error,omitempty"`
 }
 
-func (p *OpenAIProvider) GenerateResponse(ctx context.Context, prompt string, systemData models.SystemContext) (string, error) {
+func (p *OpenAIProvider) GenerateResponse(ctx context.Context, prompt string, systemData models.SystemContext, privacyConfig models.PrivacyConfig) (string, error) {
 	if !p.Available() {
 		return "", fmt.Errorf("OpenAI API key not configured")
 	}
 
-	fullPrompt := BuildPrompt(prompt, systemData)
+	fullPrompt := BuildPrompt(prompt, systemData, privacyConfig)
 
 	reqBody := openAIRequest{
 		Model: p.model,

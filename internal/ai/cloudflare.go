@@ -60,12 +60,12 @@ type cfResponse struct {
 	} `json:"errors"`
 }
 
-func (p *CloudflareProvider) GenerateResponse(ctx context.Context, prompt string, systemData models.SystemContext) (string, error) {
+func (p *CloudflareProvider) GenerateResponse(ctx context.Context, prompt string, systemData models.SystemContext, privacyConfig models.PrivacyConfig) (string, error) {
 	if !p.Available() {
 		return "", fmt.Errorf("Cloudflare API token or account ID not configured")
 	}
 
-	fullPrompt := BuildPrompt(prompt, systemData)
+	fullPrompt := BuildPrompt(prompt, systemData, privacyConfig)
 
 	reqBody := cfRequest{
 		Messages: []cfMessage{
