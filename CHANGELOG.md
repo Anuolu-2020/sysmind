@@ -1,3 +1,10 @@
+## [0.2.1] - 2026-03-19
+
+### Changes
+- Merge pull request #22 from Anuolu-2020/dev (a4e2f41)
+- chore: bump version to 0.1.13 (177c5fe)
+- fix(windows): hide console windows when executing external commands (a447417)
+
 ## [0.2.0] - 2026-03-19
 
 ### Changes
