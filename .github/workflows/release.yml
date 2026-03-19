@@ -6,7 +6,7 @@ on:
       - 'v*.*.*'
 
 env:
-  GO_VERSION: '1.21'
+  GO_VERSION: '1.22'
   NODE_VERSION: '18'
 
 permissions:
@@ -106,6 +106,25 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev
+      
+    - name: Install macOS dependencies
+      if: matrix.os == 'macos-latest'
+      run: |
+        # Xcode Command Line Tools are pre-installed on macOS runners
+        # Just ensure we have the latest version
+        xcode-select --install 2>/dev/null || true
+      
+    - name: Install Windows dependencies
+      if: matrix.os == 'windows-latest'
+      run: |
+        # Install Visual Studio Build Tools components if needed
+        choco install visualstudio2022-workload-nativedesktop -y --allow-downgrade 2>/dev/null || true
+        
+    - name: Prepare build icons
+      run: |
+        mkdir -p build/icons
+        cp resources/icons/icon_512.png build/icons/icon_512.png 2>/dev/null || echo "512 icon not found"
+        cp resources/icons/icon.ico build/icons/icon.ico 2>/dev/null || echo "ICO icon not found"
       
     - name: Install UPX (Linux/macOS)
       if: matrix.os != 'windows-latest'
