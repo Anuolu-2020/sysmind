@@ -169,10 +169,6 @@ Configuration and preferences:
 - **API Configuration**
   - Enter API keys and account information
   - Select preferred model for each provider
-- **Alert Preferences**
-  - Enable/disable notifications
-  - Audio alert options
-  - Threshold settings for CPU, Memory, Disk
 
 ### Theme & Design
 
