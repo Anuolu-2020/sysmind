@@ -89,6 +89,14 @@ The main dashboard provides at-a-glance system monitoring:
   - Filter connections by process name
   - View socket state and process details
 
+![Dashboard Resources Screenshot](docs/screenshots/dashboard-resources.png)
+
+**Dashboard Features in Detail:**
+- Real-time system resource visualization with smooth animations
+- Expandable process details showing command-line arguments and file descriptors
+- Network port inspection with process associations and connection states
+- Responsive layout that adapts to different window sizes
+
 ### AI Chat Tab
 
 ![AI Chat Tab Screenshot](docs/screenshots/ai-chat.png)
@@ -141,6 +149,15 @@ System security analysis:
   - Geographic location of remote servers
   - Helps identify unexpected outbound traffic
 
+![Security Details Screenshot](docs/screenshots/security-details.png)
+
+**Security Features in Detail:**
+- Real-time firewall status monitoring
+- AI-powered threat detection with risk scoring
+- Geographic mapping of network connections
+- Process behavioral analysis and recommendations
+- Detailed logs of security events and anomalies
+
 ### Alerts Tab
 
 ![Alerts Tab Screenshot](docs/screenshots/alerts.png)
@@ -168,15 +185,16 @@ Configuration and preferences:
   - Audio alert options
   - Threshold settings for CPU, Memory, Disk
 
-### Header & Navigation
+![Settings Configuration Screenshot](docs/screenshots/settings-configuration.png)
 
-![Header Screenshot](docs/screenshots/header.png)
-
-- **Title**: "SysMind" with app branding
-- **Alert Badge**: Shows active alert count (if any)
-- **AI Status**: "AI Ready" or "AI Not Configured"
-- **Help Button** (?): Display keyboard shortcuts
-- **Close Button** (✕): Minimize to system tray
+**Settings Features in Detail:**
+- Simple dropdown-based AI provider switching
+- Support for 8 different AI providers with unique configuration options
+- Real-time model availability checking
+- Secure API key storage and validation
+- Custom threshold configuration for system alerts
+- Audio notification preferences with test options
+- Theme and UI preference settings
 
 ### Theme & Design
 
