@@ -251,6 +251,40 @@ make dev
 make build
 ```
 
+### Installing Built Binaries (Linux)
+
+After building, you can install SysMind for easy access:
+
+#### User Installation (Recommended)
+Install for your user account only (~/.local):
+```bash
+make install-user
+# Then add to PATH:
+export PATH=$PATH:~/.local/bin
+# Or add permanently to ~/.bashrc or ~/.zshrc
+```
+
+#### System-wide Installation
+Install for all users (requires sudo):
+```bash
+make install-system
+# Now available as 'sysmind' from any terminal
+```
+
+#### Uninstall
+```bash
+# Remove user installation
+make uninstall-user
+
+# Remove system installation (requires sudo)
+make uninstall-system
+```
+
+After installation, SysMind will appear in your application menu and can be launched with:
+```bash
+sysmind
+```
+
 ## ⚙️ Configuration
 
 ### OpenAI Setup
