@@ -426,6 +426,34 @@ export namespace models {
 	        this.processName = source["processName"];
 	    }
 	}
+	export class PrivacyConfig {
+	    shareProcessNames: boolean;
+	    shareProcessDetails: boolean;
+	    shareNetworkPorts: boolean;
+	    shareConnectionIPs: boolean;
+	    shareConnectionGeo: boolean;
+	    shareSecurityInfo: boolean;
+	    shareSystemStats: boolean;
+	    anonymizeProcesses: boolean;
+	    anonymizeConnections: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new PrivacyConfig(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.shareProcessNames = source["shareProcessNames"];
+	        this.shareProcessDetails = source["shareProcessDetails"];
+	        this.shareNetworkPorts = source["shareNetworkPorts"];
+	        this.shareConnectionIPs = source["shareConnectionIPs"];
+	        this.shareConnectionGeo = source["shareConnectionGeo"];
+	        this.shareSecurityInfo = source["shareSecurityInfo"];
+	        this.shareSystemStats = source["shareSystemStats"];
+	        this.anonymizeProcesses = source["anonymizeProcesses"];
+	        this.anonymizeConnections = source["anonymizeConnections"];
+	    }
+	}
 	export class ProcessInfo {
 	    pid: number;
 	    name: string;
