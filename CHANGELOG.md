@@ -1,3 +1,15 @@
+## [0.2.3] - 2026-03-19
+
+### Changes
+- Merge pull request #27 from Anuolu-2020/dev (8757e3b)
+- chore: bump version to 0.2.1 (d1964e8)
+- fix: Gemini response formatting and Windows chat layout (90790d6)
+- fix: proper Wails build directory structure for app icons (bd26d22)
+- fix: Windows notifications and block chat when AI not configured (9af2aa6)
+- Merge pull request #26 from Anuolu-2020/dev (5a7d9ae)
+- feat(ui): improve chat interface description (0698d6a)
+- Merge pull request #25 from Anuolu-2020/main (ece0a8c)
+
 ## [0.2.2] - 2026-03-19
 
 ### Changes
