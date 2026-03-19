@@ -79,6 +79,9 @@ type SystemContext struct {
 	Timestamp    time.Time      `json:"timestamp"`
 	CPUUsage     float64        `json:"cpuUsage"`
 	MemUsage     float64        `json:"memUsage"`
+	DiskUsage    float64        `json:"diskUsage"`
+	DiskUsedGB   float64        `json:"diskUsedGB"`
+	DiskTotalGB  float64        `json:"diskTotalGB"`
 	SecurityInfo *SecurityInfo  `json:"securityInfo,omitempty"`
 }
 
