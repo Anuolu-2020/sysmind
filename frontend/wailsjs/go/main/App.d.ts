@@ -52,6 +52,8 @@ export function GetNetworkUsage():Promise<Array<models.NetworkUsage>>;
 
 export function GetPorts():Promise<Array<models.PortInfo>>;
 
+export function GetPrivacyConfig():Promise<models.PrivacyConfig>;
+
 export function GetProcesses():Promise<Array<models.ProcessInfo>>;
 
 export function GetPromptTemplates():Promise<Array<models.PromptTemplate>>;
@@ -97,6 +99,8 @@ export function SendTestNotification(arg1:string,arg2:string):Promise<void>;
 export function SetAIConfig(arg1:models.AIConfig):Promise<void>;
 
 export function SetAlertConfig(arg1:models.AlertConfig):Promise<void>;
+
+export function SetPrivacyConfig(arg1:models.PrivacyConfig):Promise<Record<string, any>>;
 
 export function SetProcessPriority(arg1:number,arg2:number):Promise<Record<string, any>>;
 

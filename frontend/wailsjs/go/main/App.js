@@ -98,6 +98,10 @@ export function GetPorts() {
   return window['go']['main']['App']['GetPorts']();
 }
 
+export function GetPrivacyConfig() {
+  return window['go']['main']['App']['GetPrivacyConfig']();
+}
+
 export function GetProcesses() {
   return window['go']['main']['App']['GetProcesses']();
 }
@@ -188,6 +192,10 @@ export function SetAIConfig(arg1) {
 
 export function SetAlertConfig(arg1) {
   return window['go']['main']['App']['SetAlertConfig'](arg1);
+}
+
+export function SetPrivacyConfig(arg1) {
+  return window['go']['main']['App']['SetPrivacyConfig'](arg1);
 }
 
 export function SetProcessPriority(arg1, arg2) {
