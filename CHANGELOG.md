@@ -1,3 +1,8 @@
+## [0.1.8] - 2026-03-19
+
+### Changes
+- fix: set shell to bash for icon preparation in release workflow (faf0006)
+
 ## [0.1.7] - 2026-03-19
 
 ### Changes
