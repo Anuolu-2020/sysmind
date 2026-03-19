@@ -1307,7 +1307,8 @@ func (a *App) sendNotification(title, message string) {
 	// Send native desktop notification using beeep (cross-platform)
 	// This works on Linux (via libnotify/dbus), macOS (via osascript), and Windows (via toast)
 	go func() {
-		err := beeep.Notify("SysMind: "+title, message, "")
+		iconPath := getNotificationIconPath()
+		err := beeep.Notify("SysMind: "+title, message, iconPath)
 		if err != nil {
 			// Log error but don't fail - notification is not critical
 			fmt.Printf("Failed to send notification: %v\n", err)
@@ -1330,7 +1331,8 @@ func (a *App) SendTestNotification(title, message string) error {
 		message = "This is a test notification from SysMind"
 	}
 
-	err := beeep.Notify("SysMind: "+title, message, "")
+	iconPath := getNotificationIconPath()
+	err := beeep.Notify("SysMind: "+title, message, iconPath)
 	if err != nil {
 		return fmt.Errorf("failed to send notification: %w", err)
 	}

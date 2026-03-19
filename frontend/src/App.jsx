@@ -263,7 +263,7 @@ function AppContent() {
       <main className="main-content">
         {activeTab === 'dashboard' && <Dashboard />}
         <div style={{ display: activeTab === 'chat' ? 'block' : 'none' }}>
-          <Chat />
+          <Chat isConfigured={isConfigured} onNavigateToSettings={() => setActiveTab('settings')} />
         </div>
         {activeTab === 'security' && <Security />}
         {activeTab === 'insights' && <AutoInsights />}
