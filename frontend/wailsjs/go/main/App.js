@@ -122,12 +122,24 @@ export function GetSecurityInfoWithGeo() {
   return window['go']['main']['App']['GetSecurityInfoWithGeo']();
 }
 
+export function GetShortVersion() {
+  return window['go']['main']['App']['GetShortVersion']();
+}
+
 export function GetSystemContext() {
   return window['go']['main']['App']['GetSystemContext']();
 }
 
 export function GetSystemStats() {
   return window['go']['main']['App']['GetSystemStats']();
+}
+
+export function GetVersion() {
+  return window['go']['main']['App']['GetVersion']();
+}
+
+export function GetVersionString() {
+  return window['go']['main']['App']['GetVersionString']();
 }
 
 export function IsAIConfigured() {
@@ -140,6 +152,14 @@ export function KillProcess(arg1) {
 
 export function MarkInsightAsRead(arg1) {
   return window['go']['main']['App']['MarkInsightAsRead'](arg1);
+}
+
+export function MinimizeToTray() {
+  return window['go']['main']['App']['MinimizeToTray']();
+}
+
+export function QuitApp() {
+  return window['go']['main']['App']['QuitApp']();
 }
 
 export function RemoveContainer(arg1) {
@@ -158,6 +178,10 @@ export function SendChatMessageStreaming(arg1, arg2) {
   return window['go']['main']['App']['SendChatMessageStreaming'](arg1, arg2);
 }
 
+export function SendTestNotification(arg1, arg2) {
+  return window['go']['main']['App']['SendTestNotification'](arg1, arg2);
+}
+
 export function SetAIConfig(arg1) {
   return window['go']['main']['App']['SetAIConfig'](arg1);
 }
@@ -168,6 +192,10 @@ export function SetAlertConfig(arg1) {
 
 export function SetProcessPriority(arg1, arg2) {
   return window['go']['main']['App']['SetProcessPriority'](arg1, arg2);
+}
+
+export function ShowFromTray() {
+  return window['go']['main']['App']['ShowFromTray']();
 }
 
 export function StartContainer(arg1) {
