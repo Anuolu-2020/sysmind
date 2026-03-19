@@ -231,6 +231,7 @@ func forceEnglishCountryName(countryCode string) string {
 }
 
 // containsNonLatin checks if a string contains non-Latin characters
+// nolint:unused
 func containsNonLatin(s string) bool {
 	for _, r := range s {
 		// Allow Latin characters, spaces, hyphens, apostrophes

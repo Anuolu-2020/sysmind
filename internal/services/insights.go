@@ -14,6 +14,14 @@ import (
 	"sysmind/internal/models"
 )
 
+// titleCase converts the first letter of a string to uppercase
+func titleCase(s string) string {
+	if s == "" {
+		return s
+	}
+	return strings.ToUpper(s[:1]) + s[1:]
+}
+
 // InsightService manages automatic system insights
 type InsightService struct {
 	dataDir   string
@@ -83,7 +91,7 @@ func NewInsightService() (*InsightService, error) {
 // generateID creates a unique insight ID
 func generateInsightID() string {
 	bytes := make([]byte, 8)
-	rand.Read(bytes)
+	_, _ = rand.Read(bytes)
 	return hex.EncodeToString(bytes)
 }
 
@@ -210,12 +218,10 @@ func (is *InsightService) AnalyzeSystem(stats models.SystemStats, processes []mo
 	}
 
 	// Store new insights
-	for _, insight := range newInsights {
-		is.insights = append(is.insights, insight)
-	}
+	is.insights = append(is.insights, newInsights...)
 
 	if len(newInsights) > 0 {
-		is.saveInsights()
+		_ = is.saveInsights()
 	}
 
 	// Periodic cleanup of old triggers
@@ -455,7 +461,7 @@ func (is *InsightService) detectConfirmedThreats(security *models.SecurityInfo, 
 
 			insight := models.AutoInsight{
 				ID:          generateInsightID(),
-				Title:       fmt.Sprintf("%s Risk Process Detected", strings.Title(suspProc.RiskLevel)),
+				Title:       fmt.Sprintf("%s Risk Process Detected", titleCase(suspProc.RiskLevel)),
 				Message:     fmt.Sprintf("'%s' has been flagged as %s risk", suspProc.Name, suspProc.RiskLevel),
 				Category:    "security",
 				Severity:    severity,
