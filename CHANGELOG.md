@@ -1,3 +1,8 @@
+## [0.1.12] - 2026-03-19
+
+### Changes
+- chore: remove linux-arm64 from release matrix (a528a9b)
+
 ## [0.1.11] - 2026-03-19
 
 ### Changes
