@@ -1,3 +1,8 @@
+## [0.1.6] - 2026-03-19
+
+### Changes
+- fix: linux build dependency and runner mapping (0643fb7)
+
 ## [0.1.5] - 2026-03-19
 
 ### Changes
