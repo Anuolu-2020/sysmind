@@ -1,3 +1,18 @@
+## [0.3.0] - 2026-03-20
+
+### Changes
+- Merge pull request #28 from Anuolu-2020/dev (d53d277)
+- feat(dashboard): add predictive time machine and future projections (5c983fb)
+- feat(app): add time machine service (dee46c1)
+- feat(time-machine): add time machine service (246a22c)
+- feat(models): add data models for rewind and time machine analysis (bd1f070)
+- feat(frontend): add GetTimeMachine function (01d2c6b)
+- fix(app): Update minimize button tooltip (4af55e1)
+- fix(app): Update minimize button tooltip (835bc60)
+- feat(time-machine): add time machine component (30c7b4d)
+- feat(ResourceTimeline): add compact mode and remove summary stats (16b979f)
+- feat(dashboard): add TimeMachine component and enhance port filtering (a875307)
+
 ## [0.2.3] - 2026-03-19
 
 ### Changes
