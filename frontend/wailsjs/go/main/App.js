@@ -138,6 +138,10 @@ export function GetSystemStats() {
   return window['go']['main']['App']['GetSystemStats']();
 }
 
+export function GetTimeMachine(arg1) {
+  return window['go']['main']['App']['GetTimeMachine'](arg1);
+}
+
 export function GetVersion() {
   return window['go']['main']['App']['GetVersion']();
 }

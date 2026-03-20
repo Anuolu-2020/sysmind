@@ -72,6 +72,8 @@ export function GetSystemContext():Promise<models.SystemContext>;
 
 export function GetSystemStats():Promise<Record<string, number>>;
 
+export function GetTimeMachine(arg1:number):Promise<models.TimeMachineView>;
+
 export function GetVersion():Promise<version.Info>;
 
 export function GetVersionString():Promise<string>;
