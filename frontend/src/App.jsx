@@ -208,7 +208,7 @@ function AppContent() {
                  await window.go.main.App.MinimizeToTray();
                }
              }}
-             title="Minimize to tray (you can restore from system tray)"
+             title="Minimize window"
            >
              ✕
            </button>
