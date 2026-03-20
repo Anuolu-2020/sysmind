@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useErrorDialog } from '../contexts/ErrorDialogContext';
 import SystemStats from './SystemStats';
+import TimeMachine from './TimeMachine';
 import ResourceTimeline from './ResourceTimeline';
 
 function Dashboard() {
@@ -203,11 +204,12 @@ Focus on practical insights and actionable recommendations.`;
   const filteredPorts = ports
     .filter(p => 
       p.processName?.toLowerCase().includes(portFilter.toLowerCase()) ||
-      String(p.port).includes(portFilter)
+      String(p.port).includes(portFilter) ||
+      p.protocol?.toLowerCase().includes(portFilter.toLowerCase())
     )
     .slice(0, 50);
 
-  const topNetworkUsage = networkUsage
+  const topNetworkUsage = [...networkUsage]
     .sort((a, b) => (b.downloadSpeed + b.uploadSpeed) - (a.downloadSpeed + a.uploadSpeed))
     .slice(0, 20);
 
@@ -253,8 +255,9 @@ Focus on practical insights and actionable recommendations.`;
       {/* System Stats at top */}
       <SystemStats />
 
-      {/* Resource Timeline */}
       <ResourceTimeline />
+
+      <TimeMachine compact />
 
       <div className="dashboard-grid">
         {/* Processes Table */}
@@ -338,7 +341,6 @@ Focus on practical insights and actionable recommendations.`;
           </div>
         </div>
 
-        {/* Ports Table */}
         <div className="table-container">
           <div className="table-header">
             <span className="table-title">Open Ports ({ports.length})</span>
@@ -362,7 +364,7 @@ Focus on practical insights and actionable recommendations.`;
                   <th>Actions</th>
                 </tr>
               </thead>
-                <tbody>
+              <tbody>
                 {filteredPorts.map((port, idx) => (
                   <tr key={`${port.port}-${port.protocol}-${idx}`}>
                     <td className="text-mono">{port.port}</td>
@@ -394,7 +396,6 @@ Focus on practical insights and actionable recommendations.`;
           </div>
         </div>
 
-        {/* Network Usage Table */}
         <div className="table-container" style={{ gridColumn: '1 / -1' }}>
           <div className="table-header">
             <span className="table-title">Network Usage</span>
