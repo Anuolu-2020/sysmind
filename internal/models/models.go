@@ -71,6 +71,154 @@ type ResourceTimelinePoint struct {
 	NetDownSpeed   float64 `json:"netDownSpeed"`
 }
 
+// IncidentProcessSample stores a lightweight process snapshot for rewind analysis
+type IncidentProcessSample struct {
+	PID        int32   `json:"pid"`
+	Name       string  `json:"name"`
+	CPUPercent float64 `json:"cpuPercent"`
+	MemoryMB   float64 `json:"memoryMB"`
+	NumThreads int32   `json:"numThreads"`
+	Status     string  `json:"status"`
+}
+
+// IncidentSample stores a synchronized system snapshot for rewind analysis
+type IncidentSample struct {
+	Timestamp      int64                   `json:"timestamp"`
+	CPUPercent     float64                 `json:"cpuPercent"`
+	MemoryPercent  float64                 `json:"memoryPercent"`
+	DiskPercent    float64                 `json:"diskPercent"`
+	DiskUsedGB     float64                 `json:"diskUsedGB"`
+	DiskTotalGB    float64                 `json:"diskTotalGB"`
+	NetUploadSpeed float64                 `json:"netUploadSpeed"`
+	NetDownSpeed   float64                 `json:"netDownSpeed"`
+	LoadAvg1       float64                 `json:"loadAvg1"`
+	Processes      []IncidentProcessSample `json:"processes"`
+}
+
+// IncidentFinding represents a detected anomaly in the rewind window
+type IncidentFinding struct {
+	ID                  string  `json:"id"`
+	Category            string  `json:"category"`
+	Severity            string  `json:"severity"`
+	Title               string  `json:"title"`
+	Summary             string  `json:"summary"`
+	Metric              string  `json:"metric"`
+	StartedAt           int64   `json:"startedAt"`
+	PeakAt              int64   `json:"peakAt"`
+	StartValue          float64 `json:"startValue"`
+	PeakValue           float64 `json:"peakValue"`
+	CulpritPID          int32   `json:"culpritPid"`
+	CulpritName         string  `json:"culpritName"`
+	CulpritCPUPercent   float64 `json:"culpritCpuPercent"`
+	CulpritMemoryMB     float64 `json:"culpritMemoryMB"`
+	CulpritThreads      int32   `json:"culpritThreads"`
+	CulpritStatus       string  `json:"culpritStatus"`
+	ThreadHint          string  `json:"threadHint"`
+	SyscallHint         string  `json:"syscallHint"`
+	Confidence          float64 `json:"confidence"`
+	ExactTraceAvailable bool    `json:"exactTraceAvailable"`
+}
+
+// IncidentRewind bundles rewind samples with detected findings
+type IncidentRewind struct {
+	WindowMinutes     int               `json:"windowMinutes"`
+	ResolutionSeconds int               `json:"resolutionSeconds"`
+	Samples           []IncidentSample  `json:"samples"`
+	Findings          []IncidentFinding `json:"findings"`
+	HighlightedAt     int64             `json:"highlightedAt"`
+	Summary           string            `json:"summary"`
+}
+
+// TimeMachineSample stores persisted lower-frequency telemetry for past and future analysis.
+type TimeMachineSample struct {
+	Timestamp      int64                   `json:"timestamp"`
+	CPUPercent     float64                 `json:"cpuPercent"`
+	MemoryPercent  float64                 `json:"memoryPercent"`
+	DiskPercent    float64                 `json:"diskPercent"`
+	DiskUsedGB     float64                 `json:"diskUsedGB"`
+	DiskTotalGB    float64                 `json:"diskTotalGB"`
+	NetUploadSpeed float64                 `json:"netUploadSpeed"`
+	NetDownSpeed   float64                 `json:"netDownSpeed"`
+	LoadAvg1       float64                 `json:"loadAvg1"`
+	Processes      []IncidentProcessSample `json:"processes"`
+}
+
+// TimeMachineAnnotation marks a notable event on the time machine timeline.
+type TimeMachineAnnotation struct {
+	ID          string  `json:"id"`
+	Kind        string  `json:"kind"`
+	Severity    string  `json:"severity"`
+	Timestamp   int64   `json:"timestamp"`
+	Title       string  `json:"title"`
+	Summary     string  `json:"summary"`
+	ProcessName string  `json:"processName"`
+	ProcessPID  int32   `json:"processPid"`
+	Metric      string  `json:"metric"`
+	Value       float64 `json:"value"`
+}
+
+// TimeMachineForecast represents a forward projection based on recent telemetry.
+type TimeMachineForecast struct {
+	ID             string  `json:"id"`
+	Kind           string  `json:"kind"`
+	Severity       string  `json:"severity"`
+	Title          string  `json:"title"`
+	Summary        string  `json:"summary"`
+	PredictedAt    int64   `json:"predictedAt"`
+	CurrentValue   float64 `json:"currentValue"`
+	ProjectedValue float64 `json:"projectedValue"`
+	Confidence     float64 `json:"confidence"`
+	Unit           string  `json:"unit"`
+}
+
+// TimeMachineView bundles persisted history, annotations, and forecasts for the scrubber UI.
+type TimeMachineView struct {
+	WindowHours        int                     `json:"windowHours"`
+	RetentionHours     int                     `json:"retentionHours"`
+	SamplingSeconds    int                     `json:"samplingSeconds"`
+	Samples            []TimeMachineSample     `json:"samples"`
+	Annotations        []TimeMachineAnnotation `json:"annotations"`
+	Forecasts          []TimeMachineForecast   `json:"forecasts"`
+	Summary            string                  `json:"summary"`
+	LastUpdated        int64                   `json:"lastUpdated"`
+	PersistenceEnabled bool                    `json:"persistenceEnabled"`
+}
+
+// BaselineDriftFinding describes behavior that deviates from this machine's learned baseline.
+type BaselineDriftFinding struct {
+	ID            string  `json:"id"`
+	Kind          string  `json:"kind"`
+	Category      string  `json:"category"`
+	Severity      string  `json:"severity"`
+	Title         string  `json:"title"`
+	Summary       string  `json:"summary"`
+	Metric        string  `json:"metric"`
+	Unit          string  `json:"unit"`
+	CurrentValue  float64 `json:"currentValue"`
+	BaselineValue float64 `json:"baselineValue"`
+	ExpectedHigh  float64 `json:"expectedHigh"`
+	DeltaPercent  float64 `json:"deltaPercent"`
+	ProcessName   string  `json:"processName,omitempty"`
+	ProcessPID    int32   `json:"processPid,omitempty"`
+	Port          uint32  `json:"port,omitempty"`
+	Protocol      string  `json:"protocol,omitempty"`
+	FirstSeenAt   int64   `json:"firstSeenAt,omitempty"`
+	LastSeenAt    int64   `json:"lastSeenAt,omitempty"`
+	SampleCount   int     `json:"sampleCount"`
+	Confidence    float64 `json:"confidence"`
+	IsNew         bool    `json:"isNew"`
+}
+
+// BaselineDriftView bundles the current new/unusual findings against learned behavior.
+type BaselineDriftView struct {
+	GeneratedAt   int64                  `json:"generatedAt"`
+	CoverageHours int                    `json:"coverageHours"`
+	SampleCount   int                    `json:"sampleCount"`
+	Learning      bool                   `json:"learning"`
+	Findings      []BaselineDriftFinding `json:"findings"`
+	Summary       string                 `json:"summary"`
+}
+
 // SystemContext contains all system monitoring data for AI analysis
 type SystemContext struct {
 	Processes    []ProcessInfo  `json:"processes"`
