@@ -29,6 +29,8 @@ SysMind is a cross-platform desktop application built with Go and Wails that pro
 - **Process Monitoring**: View all running processes with CPU and memory usage
 - **Network Analysis**: Monitor open ports (TCP/UDP) with associated processes  
 - **Resource Timeline**: Real-time charts showing CPU, memory, disk, and network usage with customizable time windows (15m, 30m, 60m)
+- **Predictive Time Machine**: Scrub persisted telemetry across 3h, 6h, and 24h windows with past highlights and future projections
+- **Future Projections**: Forecast near-term disk exhaustion and memory pressure when trends are stable enough
 - **Disk Monitoring**: Real-time disk usage percentage, used/total capacity, and disk I/O speeds
 - **Bandwidth Tracking**: Network usage per application with upload/download speeds
 - **System Stats Cards**: Real-time CPU, RAM, and network metrics with mini-trend graphs
@@ -153,6 +155,11 @@ The main dashboard provides at-a-glance system monitoring:
   - Network bandwidth timeline (upload/download)
   - Customizable time windows (15m, 30m, 60m)
   - Smooth area charts with historical data
+- **Predictive Time Machine** (Middle Section)
+  - Persisted telemetry history with a scrubber-style timeline
+  - Past AI-generated highlights for spikes, burst activity, and leak-style growth
+  - Future projections for disk exhaustion and memory pressure when the trend is statistically stable
+  - 3h, 6h, and 24h review windows with forecast confidence and predicted time
 - **Process List** (Bottom Section)
   - Sortable table of running processes
   - Filter by process name
@@ -413,10 +420,21 @@ Press **Ctrl+K** anywhere in the application (except in the Chat tab) to open th
 - *"What processes are using the most CPU?"*
 - *"Is anything suspicious running on my system?"*
 - *"What's using my internet connection?"*
+- *"Do you see any future disk or memory risk?"*
+- *"When will this machine run into memory pressure?"*
+- *"Show me the forecast behind this trend."*
 - *"Show me all listening network ports"*
 - *"Explain what this process does"*
 - *"How much disk space do I have left?"*
 - *"How can I optimize my system performance?"*
+
+### Predictive Time Machine Notes
+- Forecasts are heuristic, based on persisted telemetry and recent trend regression.
+- A projection only appears when there are enough recent samples and the trend is strong enough to be meaningful.
+- Current future projections cover:
+  - **Disk exhaustion forecast**: estimates when the primary disk may fill if recent disk growth continues
+  - **Memory pressure forecast**: estimates when RAM usage may cross 90% if the current rise continues
+- If no projection is shown, the app is not failing; it means the recent trend is too weak, too noisy, or too short to justify a forecast.
 
 ### Dashboard Navigation
 - **Dashboard Tab (Ctrl+1)**: System overview with processes, ports, and resource timeline

@@ -235,6 +235,60 @@ func (is *InsightService) AnalyzeSystem(stats models.SystemStats, processes []mo
 	return newInsights
 }
 
+// AnalyzeDriftFindings turns baseline drift findings into persisted auto insights.
+func (is *InsightService) AnalyzeDriftFindings(findings []models.BaselineDriftFinding) []models.AutoInsight {
+	is.mu.Lock()
+	defer is.mu.Unlock()
+
+	newInsights := []models.AutoInsight{}
+	now := nowMsInsights()
+
+	for _, finding := range findings {
+		if finding.Confidence < 0.58 && !finding.IsNew {
+			continue
+		}
+		if finding.Severity == "info" && !finding.IsNew {
+			continue
+		}
+
+		triggerKey := "drift_" + finding.ID
+		if trigger := is.getTrigger(triggerKey); trigger != nil {
+			trigger.LastUpdate = now
+			continue
+		}
+
+		data, _ := json.Marshal(finding)
+		insight := models.AutoInsight{
+			ID:          generateInsightID(),
+			Title:       finding.Title,
+			Message:     finding.Summary,
+			Category:    finding.Category,
+			Severity:    finding.Severity,
+			Timestamp:   now,
+			IsRead:      false,
+			Data:        string(data),
+			ActionItems: driftActionItems(finding),
+		}
+
+		newInsights = append(newInsights, insight)
+		is.triggers[triggerKey] = &models.InsightTrigger{
+			Type:       "baseline_drift",
+			StartTime:  now,
+			LastUpdate: now,
+			Count:      1,
+			Data:       finding.ID,
+			Triggered:  true,
+		}
+	}
+
+	if len(newInsights) > 0 {
+		is.insights = append(is.insights, newInsights...)
+		_ = is.saveInsights()
+	}
+
+	return newInsights
+}
+
 // updateBaseline continuously builds a profile of normal system behavior
 func (is *InsightService) updateBaseline(stats models.SystemStats, processes []models.ProcessInfo) {
 	baseline := is.baselineStats
@@ -498,6 +552,41 @@ func (is *InsightService) cleanupStaleTrigers() {
 // getTrigger retrieves an existing trigger
 func (is *InsightService) getTrigger(key string) *models.InsightTrigger {
 	return is.triggers[key]
+}
+
+func driftActionItems(finding models.BaselineDriftFinding) []string {
+	switch finding.Kind {
+	case "new-port":
+		return []string{
+			"Confirm the service is expected on this machine",
+			"Check which app or dev server opened the listener",
+			"Close or firewall it if you did not expect the port",
+		}
+	case "new-process":
+		return []string{
+			"Confirm you intentionally started this process",
+			"Check whether the timing matches a build, container, or browser task",
+			"Watch the process table to see if resource use keeps climbing",
+		}
+	case "process-memory-drift":
+		return []string{
+			"Inspect whether the process is leaking memory or holding large caches",
+			"Compare against your recent workload to see if this spike is expected",
+			"Restart or recycle the process if memory keeps climbing",
+		}
+	case "process-cpu-drift":
+		return []string{
+			"Check whether the process is compiling, indexing, syncing, or stuck in a loop",
+			"Compare the current task with what you normally run at this time",
+			"Throttle or stop the process if it is not expected",
+		}
+	default:
+		return []string{
+			"Compare this behavior with what you were doing when the spike started",
+			"Check the top processes and open ports for the most likely cause",
+			"Use AI Explain on the finding for a contextual hypothesis",
+		}
+	}
 }
 
 // GetInsights returns all insights, optionally filtered

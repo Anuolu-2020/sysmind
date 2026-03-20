@@ -31,7 +31,7 @@ function getThemeColors() {
   };
 }
 
-function ResourceTimeline() {
+function ResourceTimeline({ compact = false }) {
   const [points, setPoints] = useState([]);
   const [minutes, setMinutes] = useState(30);
   const [theme, setTheme] = useState(null);
@@ -81,24 +81,6 @@ function ResourceTimeline() {
       return Math.max(max, down, up);
     }, 0);
     return Math.max(maxValue, 1024); // At least 1KB/s scale
-  }, [points]);
-
-  const summary = useMemo(() => {
-    if (!points.length) {
-      return { cpuAvg: 0, memAvg: 0, cpuPeak: 0, memPeak: 0, diskPeak: 0, netPeak: 0 };
-    }
-
-    const cpuValues = points.map(p => Number(p?.cpuPercent || 0));
-    const memValues = points.map(p => Number(p?.memoryPercent || 0));
-
-    return {
-      cpuAvg: cpuValues.reduce((a, b) => a + b, 0) / cpuValues.length,
-      memAvg: memValues.reduce((a, b) => a + b, 0) / memValues.length,
-      cpuPeak: Math.max(...cpuValues),
-      memPeak: Math.max(...memValues),
-      diskPeak: Math.max(...points.map(p => Number(p?.diskPercent || 0))),
-      netPeak: Math.max(...points.map(p => Math.max(Number(p?.netDownSpeed || 0), Number(p?.netUploadSpeed || 0)))),
-    };
   }, [points]);
 
   // Draw percentage chart (CPU, Memory, Disk)
@@ -204,14 +186,14 @@ function ResourceTimeline() {
 
   }, [points, netMax, minutes, theme]);
 
-  const latest = points.length ? points[points.length - 1] : null;
-
   return (
-    <section className="resource-timeline-card">
+    <section className={`resource-timeline-card ${compact ? 'compact' : ''}`}>
       <header className="resource-timeline-header">
         <div className="timeline-title-section">
           <h3>Resource Timeline</h3>
-          <p className="resource-timeline-subtitle">Real-time system performance metrics</p>
+          <p className="resource-timeline-subtitle">
+            {compact ? 'Live resource trends' : 'Real-time system performance metrics'}
+          </p>
         </div>
         <div className="timeline-controls">
           {[15, 30, 60].map((option) => (
@@ -267,41 +249,6 @@ function ResourceTimeline() {
           <canvas ref={networkCanvasRef} className="timeline-canvas network" />
         </div>
       </div>
-
-      {/* Stats Footer */}
-      <footer className="timeline-stats-footer">
-        <div className="stats-row">
-          <div className="stat-item">
-            <span className="stat-label">Samples</span>
-            <span className="stat-value">{points.length}</span>
-          </div>
-          <div className="stat-item current">
-            <span className="stat-label">CPU</span>
-            <span className="stat-value cpu">{Number(latest?.cpuPercent || 0).toFixed(1)}%</span>
-          </div>
-          <div className="stat-item current">
-            <span className="stat-label">Memory</span>
-            <span className="stat-value memory">{Number(latest?.memoryPercent || 0).toFixed(1)}%</span>
-          </div>
-          <div className="stat-item current">
-            <span className="stat-label">Disk</span>
-            <span className="stat-value disk">{Number(latest?.diskPercent || 0).toFixed(1)}%</span>
-          </div>
-          <div className="stat-divider"></div>
-          <div className="stat-item peak">
-            <span className="stat-label">Peak CPU</span>
-            <span className="stat-value">{summary.cpuPeak.toFixed(1)}%</span>
-          </div>
-          <div className="stat-item peak">
-            <span className="stat-label">Peak Memory</span>
-            <span className="stat-value">{summary.memPeak.toFixed(1)}%</span>
-          </div>
-          <div className="stat-item peak">
-            <span className="stat-label">Peak Network</span>
-            <span className="stat-value">{formatSpeed(summary.netPeak)}</span>
-          </div>
-        </div>
-      </footer>
     </section>
   );
 }

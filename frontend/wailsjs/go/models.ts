@@ -380,6 +380,28 @@ export namespace models {
 	}
 	
 	
+	export class IncidentProcessSample {
+	    pid: number;
+	    name: string;
+	    cpuPercent: number;
+	    memoryMB: number;
+	    numThreads: number;
+	    status: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new IncidentProcessSample(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.pid = source["pid"];
+	        this.name = source["name"];
+	        this.cpuPercent = source["cpuPercent"];
+	        this.memoryMB = source["memoryMB"];
+	        this.numThreads = source["numThreads"];
+	        this.status = source["status"];
+	    }
+	}
 	export class NetworkUsage {
 	    pid: number;
 	    processName: string;
@@ -687,6 +709,160 @@ export namespace models {
 	        this.loadAvg15 = source["loadAvg15"];
 	        this.timestamp = source["timestamp"];
 	    }
+	}
+	export class TimeMachineAnnotation {
+	    id: string;
+	    kind: string;
+	    severity: string;
+	    timestamp: number;
+	    title: string;
+	    summary: string;
+	    processName: string;
+	    processPid: number;
+	    metric: string;
+	    value: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new TimeMachineAnnotation(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.kind = source["kind"];
+	        this.severity = source["severity"];
+	        this.timestamp = source["timestamp"];
+	        this.title = source["title"];
+	        this.summary = source["summary"];
+	        this.processName = source["processName"];
+	        this.processPid = source["processPid"];
+	        this.metric = source["metric"];
+	        this.value = source["value"];
+	    }
+	}
+	export class TimeMachineForecast {
+	    id: string;
+	    kind: string;
+	    severity: string;
+	    title: string;
+	    summary: string;
+	    predictedAt: number;
+	    currentValue: number;
+	    projectedValue: number;
+	    confidence: number;
+	    unit: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new TimeMachineForecast(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.kind = source["kind"];
+	        this.severity = source["severity"];
+	        this.title = source["title"];
+	        this.summary = source["summary"];
+	        this.predictedAt = source["predictedAt"];
+	        this.currentValue = source["currentValue"];
+	        this.projectedValue = source["projectedValue"];
+	        this.confidence = source["confidence"];
+	        this.unit = source["unit"];
+	    }
+	}
+	export class TimeMachineSample {
+	    timestamp: number;
+	    cpuPercent: number;
+	    memoryPercent: number;
+	    diskPercent: number;
+	    diskUsedGB: number;
+	    diskTotalGB: number;
+	    netUploadSpeed: number;
+	    netDownSpeed: number;
+	    loadAvg1: number;
+	    processes: IncidentProcessSample[];
+	
+	    static createFrom(source: any = {}) {
+	        return new TimeMachineSample(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.timestamp = source["timestamp"];
+	        this.cpuPercent = source["cpuPercent"];
+	        this.memoryPercent = source["memoryPercent"];
+	        this.diskPercent = source["diskPercent"];
+	        this.diskUsedGB = source["diskUsedGB"];
+	        this.diskTotalGB = source["diskTotalGB"];
+	        this.netUploadSpeed = source["netUploadSpeed"];
+	        this.netDownSpeed = source["netDownSpeed"];
+	        this.loadAvg1 = source["loadAvg1"];
+	        this.processes = this.convertValues(source["processes"], IncidentProcessSample);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class TimeMachineView {
+	    windowHours: number;
+	    retentionHours: number;
+	    samplingSeconds: number;
+	    samples: TimeMachineSample[];
+	    annotations: TimeMachineAnnotation[];
+	    forecasts: TimeMachineForecast[];
+	    summary: string;
+	    lastUpdated: number;
+	    persistenceEnabled: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new TimeMachineView(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.windowHours = source["windowHours"];
+	        this.retentionHours = source["retentionHours"];
+	        this.samplingSeconds = source["samplingSeconds"];
+	        this.samples = this.convertValues(source["samples"], TimeMachineSample);
+	        this.annotations = this.convertValues(source["annotations"], TimeMachineAnnotation);
+	        this.forecasts = this.convertValues(source["forecasts"], TimeMachineForecast);
+	        this.summary = source["summary"];
+	        this.lastUpdated = source["lastUpdated"];
+	        this.persistenceEnabled = source["persistenceEnabled"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
 	}
 
 }
