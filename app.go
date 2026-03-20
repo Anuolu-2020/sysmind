@@ -24,6 +24,7 @@ type App struct {
 	chatService    *services.ChatService
 	geoIPService   *services.GeoIPService
 	insightService *services.InsightService
+	timeMachine    *services.TimeMachineService
 	aiProvider     ai.Provider
 	mu             sync.RWMutex
 
@@ -52,6 +53,7 @@ func NewApp() *App {
 	chatService, _ := services.NewChatService()
 	geoIPService := services.NewGeoIPService()
 	insightService, _ := services.NewInsightService()
+	timeMachineService, _ := services.NewTimeMachineService()
 
 	app := &App{
 		collector:      collectors.NewCollector(),
@@ -59,6 +61,7 @@ func NewApp() *App {
 		chatService:    chatService,
 		geoIPService:   geoIPService,
 		insightService: insightService,
+		timeMachine:    timeMachineService,
 		alertConfig: models.AlertConfig{
 			CPUThreshold:      80.0,
 			MemoryThreshold:   85.0,
@@ -93,7 +96,7 @@ func (a *App) startup(ctx context.Context) {
 
 // startTimelineMonitoring starts a background collector for resource timeline data
 func (a *App) startTimelineMonitoring() {
-	ticker := time.NewTicker(5 * time.Second)
+	ticker := time.NewTicker(1 * time.Second)
 	go func() {
 		for range ticker.C {
 			stats, err := a.collector.GetDetailedStats()
@@ -101,13 +104,21 @@ func (a *App) startTimelineMonitoring() {
 				continue
 			}
 
+			processes, err := a.collector.GetProcesses()
+			if err != nil {
+				processes = []models.ProcessInfo{}
+			}
+
 			point := models.ResourceTimelinePoint{
-				Timestamp:      time.Now().UnixMilli(),
+				Timestamp:      stats.Timestamp,
 				CPUPercent:     stats.CPUPercent,
 				MemoryPercent:  stats.MemoryPercent,
 				DiskPercent:    stats.DiskPercent,
 				NetUploadSpeed: stats.NetUploadSpeed,
 				NetDownSpeed:   stats.NetDownSpeed,
+			}
+			if a.timeMachine != nil {
+				a.timeMachine.AppendSample(stats, processes)
 			}
 
 			a.mu.Lock()
@@ -1267,6 +1278,10 @@ func (a *App) checkForAlerts() {
 
 // addAlert adds a new alert and sends notification
 func (a *App) addAlert(alert models.Alert) {
+	a.addAlertWithCooldown(alert, time.Minute)
+}
+
+func (a *App) addAlertWithCooldown(alert models.Alert, cooldown time.Duration) {
 	a.mu.Lock()
 	defer a.mu.Unlock()
 
@@ -1275,7 +1290,7 @@ func (a *App) addAlert(alert models.Alert) {
 	for _, existing := range a.alerts {
 		if existing.Type == alert.Type && !existing.Dismissed {
 			// If there's a recent undismissed alert of the same type, skip
-			if now-existing.Timestamp < 60000 { // 60 seconds
+			if now-existing.Timestamp < cooldown.Milliseconds() {
 				return
 			}
 		}
@@ -1477,16 +1492,20 @@ func (a *App) GetShortVersion() string {
 	return version.Short()
 }
 
-// MinimizeToTray hides the window to system tray
+// MinimizeToTray minimizes the window using the native platform behavior.
+// This avoids putting the app into an unreachable hidden state on platforms
+// where no system tray restore path is configured.
 func (a *App) MinimizeToTray() {
 	if a.ctx != nil {
-		runtime.Hide(a.ctx)
+		runtime.WindowMinimise(a.ctx)
 	}
 }
 
-// ShowFromTray shows the window from system tray
+// ShowFromTray restores the main window if it was hidden or minimised.
 func (a *App) ShowFromTray() {
 	if a.ctx != nil {
+		runtime.WindowUnminimise(a.ctx)
+		runtime.WindowShow(a.ctx)
 		runtime.Show(a.ctx)
 	}
 }
